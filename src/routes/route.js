@@ -38,7 +38,6 @@ router.get('/all-request', allRequestEstimation);
 router.delete('/delete-request-estimation/:id', deleteRequestEstitmation);
 
 // Doors Product route
-router.post("/doors/create-doors", upload.array('image'), createDoors);
 router.put("/doors/update-doors/:id", upload.array('image'), updateDoors);
 router.get("/doors/all-doors", allDoorsProduct);
 router.get("/doors/doors-details/:id", doosProductById);

@@ -30,10 +30,14 @@ app.use(
 connectDB();
 
 const spotlightDealsRoutes = require("../routes/route");
-const cartRoutes = require("../routes/cartRoutes");
+const cartRoutes= require("../routes/cartRoutes");
+const CategoryRoutes = require("../routes/CategoryRoutes");
+const DoorRoutes = require("../routes/DoorsRoute");
 
 app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/category", CategoryRoutes);
+app.use("/api/doors", DoorRoutes);
 
 // Start Server
 app.listen(PORT, () => {
