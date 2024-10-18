@@ -1,84 +1,77 @@
 const doorsModel = require("../models/doorsModel.js");
+const multer = require('multer')
+const path = require('path')
 
-const createDoors = async (req, res) => {
-  try {
-    const {
-      width,
-      height,
-      fraction,
-      grid,
-      fin_type,
-      glass_type,
-      color,
-      tempering_options,
-      side_window,
-      installation_option,
-      instruction_qustion,
-      createdBy,
-      price,
-    } = req.body;
-
-    if (
-      !width ||
-      !height ||
-      !fraction ||
-      !grid ||
-      !fin_type ||
-      !glass_type ||
-      !color ||
-      !tempering_options ||
-      !side_window ||
-      !installation_option ||
-      !instruction_qustion ||
-      !createdBy ||
-      !price ||
-      !req.files ||
-      req.files.length === 0
-    ) {
-      return res.status(400).json({
-        statusCode: 400,
-        status: "error",
-        message: "All fields are required, including images",
-      });
-    }
-
-    const imagePaths = req.files.map((file) => file.path);
-
-    const response = new doorsModel({
-      width,
-      height,
-      fraction,
-      grid,
-      fin_type,
-      glass_type,
-      color,
-      tempering_options,
-      side_window,
-      installation_option,
-      instruction_qustion,
-      images: imagePaths,
-      createdBy,
-      price,
-    });
-
-    await response.save();
-
-    res.status(201).json({
-      statusCode: 201,
-      status: "success",
-      message: "Doors created successfully",
-      data: response,
-    });
-  } catch (error) {
-    console.error("Error creating product:", error);
-    res.status(500).json({
-      statusCode: 500,
-      status: "error",
-      message: "Error creating product",
-      error: error.message,
-    });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the file name
   }
+});
+
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 5 }, 
+  fileFilter: function (req, file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Error: Images Only!'));
+    }
+  }
+}).array('images', 10); 
+
+const createDoorss = async (req, res, next) => {
+  upload(req, res, async (err) => {
+      if (err) {
+          return res.status(400).json({
+              success: false,
+              message: err.message
+          });
+      }
+
+      try {
+          const {
+            productName,
+            price,
+            discription,
+            subCategory,
+            subSubCategory,
+          } = req.body;
+
+      
+          const images = req.files ? req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`) : [];
+
+          const newdoorsModel = new doorsModel({
+            productName,
+            price,
+            discription,
+            subCategory,
+            subSubCategory,
+            images
+          });
+
+          const saveddoorsModel = await newdoorsModel.save();
+
+          res.status(200).json({
+              success: true,
+              message: "Stylist created successfully",
+              data: saveddoorsModel
+          });
+      } catch (error) {
+          next(error);
+      }
+  });
 };
+
+
 
 const updateDoors = async (req, res) => {
   try {
@@ -222,7 +215,7 @@ const deleteDoorsProduct = async (req, res) => {
 };
 
 module.exports = {
-  createDoors,
+  createDoorss,
   allDoorsProduct,
   doosProductById,
   updateDoors,
