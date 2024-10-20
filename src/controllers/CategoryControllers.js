@@ -1,4 +1,3 @@
-// controllers/categoryController.js
 
 const Category = require('../models/CategoryModel');
 
@@ -6,20 +5,16 @@ const createCategory = async (req, res) => {
   try {
     const { categoryName, subcategoryName } = req.body;
 
-    // Validate the input
     if (!categoryName || !subcategoryName) {
         return res.status(400).json({ message: "Category name and subcategory name are required." });
     }
 
-    // Ensure category name is either "Doors" or "Windows"
     if (!['Doors', 'Windows'].includes(categoryName)) {
         return res.status(400).json({ message: 'Category name must be either "Doors" or "Windows".' });
     }
 
-    // Find the category by name
     let category = await Category.findOne({ categoryName });
 
-    // If the category exists, add a new subcategory
     if (category) {
         category.subcategories.push({
             subcategoryName
@@ -33,9 +28,8 @@ const createCategory = async (req, res) => {
         });
     }
 
-    // Save the updated/created category
     const savedCategory = await category.save();
-    return res.status(201).json(savedCategory); // Send the saved data back
+    return res.status(201).json(savedCategory); 
 } catch (error) {
     console.error('Error adding/updating category:', error);
     return res.status(500).json({ message: 'Error adding/updating category', error });
@@ -118,15 +112,13 @@ const addSubSubcategory = async (req, res) => {
     }
 
     let category = await Category.findOne({ categoryName });
-    console.log(category)
 
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
     let subcategory = category.subcategories.find(sub => sub.subcategoryName === subcategoryName);
-    console.log(subcategory)
-    if (!subcategory) {
+      if (!subcategory) {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
 
@@ -136,8 +128,6 @@ const addSubSubcategory = async (req, res) => {
       return res.status(400).json({ message: 'Sub-subcategory name cannot be empty.' });
     }
 
-    console.log("updateded:",subcategory)
-
     const updatedCategory = await category.save();
 
     res.status(200).json({ message: 'Sub-Subcategory added successfully', updatedCategory });
@@ -145,11 +135,6 @@ const addSubSubcategory = async (req, res) => {
     res.status(500).json({ message: 'Error adding sub-subcategory', error });
   }
 };
-
-
-
-
-
 
 module.exports = {
     createCategory,

@@ -41,7 +41,7 @@ const createDoorss = async (req, res, next) => {
           const {
             productName,
             price,
-            discription,
+            description,
             subCategory,
             subSubCategory,
           } = req.body;
@@ -52,7 +52,7 @@ const createDoorss = async (req, res, next) => {
           const newdoorsModel = new doorsModel({
             productName,
             price,
-            discription,
+            description,
             subCategory,
             subSubCategory,
             images
