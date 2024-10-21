@@ -16,6 +16,8 @@ if (!fs.existsSync(uploadDir)) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use('/uploads', express.static('uploads'));
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -32,12 +34,16 @@ connectDB();
 const spotlightDealsRoutes = require("../routes/route");
 const cartRoutes= require("../routes/cartRoutes");
 const CategoryRoutes = require("../routes/CategoryRoutes");
-const DoorRoutes = require("../routes/DoorsRoute");
+const DoorRoutes = require("../routes/doorsRoute");
+const OrderRoutes = require("../routes/orderRoute");
+const AppointmentRoutes = require("../routes/appointmentRoute");
 
 app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/category", CategoryRoutes);
 app.use("/api/doors", DoorRoutes);
+app.use("/api/orders", OrderRoutes);
+app.use("/api/appointments", AppointmentRoutes);
 
 // Start Server
 app.listen(PORT, () => {
