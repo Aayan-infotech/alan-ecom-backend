@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 
-const doorsModel = new mongoose.Schema({
+const windowsModel = new mongoose.Schema({
   categoryName: {
     type: String,
-    default: "Doors",
+    required: false,
+    default: "Windows",
   },
   productName: {
     type: String,
@@ -79,4 +80,4 @@ const doorsModel = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("doors", doorsModel);
+module.exports = mongoose.model("windows", windowsModel);
