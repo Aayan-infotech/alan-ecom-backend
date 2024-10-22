@@ -37,6 +37,7 @@ const CategoryRoutes = require("../routes/CategoryRoutes");
 const DoorRoutes = require("../routes/doorsRoute");
 const OrderRoutes = require("../routes/orderRoute");
 const AppointmentRoutes = require("../routes/appointmentRoute");
+const WindowsRoute = require("../routes/windowsRoute");
 
 app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -44,6 +45,7 @@ app.use("/api/category", CategoryRoutes);
 app.use("/api/doors", DoorRoutes);
 app.use("/api/orders", OrderRoutes);
 app.use("/api/appointments", AppointmentRoutes);
+app.use("/api/windows", WindowsRoute);
 
 // Start Server
 app.listen(PORT, () => {
