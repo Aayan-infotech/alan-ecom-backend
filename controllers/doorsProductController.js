@@ -48,7 +48,7 @@ const createDoorss = async (req, res, next) => {
           } = req.body;
 
       
-          const images = req.files ? req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`) : [];
+          const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
           const newdoorsModel = new doorsModel({
             productName,
