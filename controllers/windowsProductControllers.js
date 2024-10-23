@@ -47,7 +47,7 @@ const createWindows = async (req, res, next) => {
           } = req.body;
 
       
-          const images = req.files ? req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`) : [];
+          const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
           const newwindowsModel = new Windows({
             productName,
@@ -71,12 +71,26 @@ const createWindows = async (req, res, next) => {
   });
 };
 
-const getAllWindows = async() => {
+const getAllWindows = async(req, res) => {
   try{
-    const windowsdata = Windows.find();
+    const windowsdata = await Windows.find();
     res.status(200).json({
-      message: "fetched windows data sucessfully!!",
-      data: windowsdata
+      statusCode: 200,
+      status: "success",
+      data: windowsdata,
+    });
+  }catch(error){
+    console.error(error);
+  }
+}
+
+const deleteWindows = async (req, res) => {
+  try{
+    const {id} = req.params
+    const window = await Windows.findByIdAndDelete(id);
+    res.status(200).json({
+      message: "Window Deleted successfully",
+      data: window
     })
   }catch(error){
     console.error(error);
@@ -85,6 +99,7 @@ const getAllWindows = async() => {
 
 module.exports = {
     createWindows,
-    getAllWindows
+    getAllWindows,
+    deleteWindows
 }
 
