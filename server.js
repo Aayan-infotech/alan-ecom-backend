@@ -34,8 +34,8 @@ connectDB();
 const spotlightDealsRoutes = require("./src/routes/route");
 const cartRoutes= require("./src/routes/cartRoutes");
 const CategoryRoutes = require("./src/routes/CategoryRoutes");
-const DoorRoutes = require("./src/routes/doorsRoute");
 const OrderRoutes = require("./src/routes/orderRoute");
+const DoorRoutes = require("./src/routes/doorsRoute")
 const AppointmentRoutes = require("./src/routes/appointmentRoute");
 const WindowsRoute = require("./src/routes/windowsRoute");
 
