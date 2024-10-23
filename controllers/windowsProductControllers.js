@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); 
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the file name
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -71,7 +71,20 @@ const createWindows = async (req, res, next) => {
   });
 };
 
+const getAllWindows = async() => {
+  try{
+    const windowsdata = Windows.find();
+    res.status(200).json({
+      message: "fetched windows data sucessfully!!",
+      data: windowsdata
+    })
+  }catch(error){
+    console.error(error);
+  }
+}
+
 module.exports = {
-    createWindows
+    createWindows,
+    getAllWindows
 }
 

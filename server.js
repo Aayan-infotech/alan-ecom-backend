@@ -31,15 +31,15 @@ app.use(
 
 connectDB();
 
-const spotlightDealsRoutes = require("./src/routes/route");
-const cartRoutes= require("./src/routes/cartRoutes");
-const CategoryRoutes = require("./src/routes/CategoryRoutes");
-const OrderRoutes = require("./src/routes/orderRoute");
-const DoorRoutes = require("./src/routes/doorsRoute")
-const AppointmentRoutes = require("./src/routes/appointmentRoute");
-const WindowsRoute = require("./src/routes/windowsRoute");
+// const spotlightDealsRoutes = require("./routes/spo");
+const cartRoutes= require("./routes/cartRoutes");
+const CategoryRoutes = require("./routes/CategoryRoutes");
+const OrderRoutes = require("./routes/orderRoute");
+const DoorRoutes = require("./routes/doorsRoute")
+const AppointmentRoutes = require("./routes/appointmentRoute");
+const WindowsRoute = require("./routes/windowsRoute");
 
-app.use("/api", spotlightDealsRoutes);
+// app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/category", CategoryRoutes);
 app.use("/api/doors", DoorRoutes);
