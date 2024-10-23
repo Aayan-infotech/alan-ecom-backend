@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const connectDB = require("./db");
+const connectDB = require("./src/config/db");
 const uploadDir = require("path").join(__dirname, "uploads");
 const fs = require("fs");
 const session = require("express-session");
@@ -31,13 +31,13 @@ app.use(
 
 connectDB();
 
-const spotlightDealsRoutes = require("../routes/route");
-const cartRoutes= require("../routes/cartRoutes");
-const CategoryRoutes = require("../routes/CategoryRoutes");
-const DoorRoutes = require("../routes/doorsRoute");
-const OrderRoutes = require("../routes/orderRoute");
-const AppointmentRoutes = require("../routes/appointmentRoute");
-const WindowsRoute = require("../routes/windowsRoute");
+const spotlightDealsRoutes = require("./src/routes/route");
+const cartRoutes= require("./src/routes/cartRoutes");
+const CategoryRoutes = require("./src/routes/CategoryRoutes");
+const OrderRoutes = require("./src/routes/orderRoute");
+const DoorRoutes = require("./src/routes/doorsRoute")
+const AppointmentRoutes = require("./src/routes/appointmentRoute");
+const WindowsRoute = require("./src/routes/windowsRoute");
 
 app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
