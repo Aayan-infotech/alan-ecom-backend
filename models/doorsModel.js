@@ -25,14 +25,6 @@ const doorsModel = new mongoose.Schema({
     type: String,
     required: false,
   },
-  width: {
-    type: String,
-    required: false,
-  },
-  height: {
-    type: String,
-    required: false,
-  },
   fraction: {
     type: String,
     required: false,

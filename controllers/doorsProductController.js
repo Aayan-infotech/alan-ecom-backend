@@ -4,7 +4,7 @@ const path = require('path')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the file name
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 5 }, 
+  limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: function (req, file, cb) {
     const filetypes = /jpeg|jpg|png|gif/;
     const mimetype = filetypes.test(file.mimetype);
@@ -26,122 +26,54 @@ const upload = multer({
       cb(new Error('Error: Images Only!'));
     }
   }
-}).array('images', 10); 
+}).array('images', 10);
 
 const createDoorss = async (req, res, next) => {
   upload(req, res, async (err) => {
-      if (err) {
-          return res.status(400).json({
-              success: false,
-              message: err.message
-          });
-      }
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
 
-      try {
-          const {
-            productName,
-            categoryName,
-            price,
-            description,
-            subCategory,
-            subSubCategory,
-          } = req.body;
+    try {
+      const {
+        productName,
+        categoryName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+      } = req.body;
 
-      
-          const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
-          const newdoorsModel = new doorsModel({
-            productName,
-            categoryName,
-            price,
-            description,
-            subCategory,
-            subSubCategory,
-            images
-          });
+      const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
-          const saveddoorsModel = await newdoorsModel.save();
+      const newdoorsModel = new doorsModel({
+        productName,
+        categoryName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+        images
+      });
 
-          res.status(200).json({
-              success: true,
-              message: "Stylist created successfully",
-              data: saveddoorsModel
-          });
-      } catch (error) {
-          next(error);
-      }
+      const saveddoorsModel = await newdoorsModel.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Stylist created successfully",
+        data: saveddoorsModel
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 };
 
 
-
-const updateDoors = async (req, res) => {
-  try {
-    const {
-      width,
-      height,
-      fraction,
-      grid,
-      fin_type,
-      glass_type,
-      color,
-      tempering_options,
-      side_window,
-      installation_option,
-      instruction_qustion,
-      createdBy,
-      price,
-    } = req.body;
-    const { id } = req.params;
-    const door = await doorsModel.findById(id);
-    if (!door) {
-      return res.status(404).json({
-        statusCode: 404,
-        status: "error",
-        message: "Door product not found",
-      });
-    }
-    let imagePaths = door.images;
-    if (req.files && req.files.length > 0) {
-      imagePaths = req.files.map((file) => file.path);
-    }
-    const updatedDoor = await doorsModel.findByIdAndUpdate(
-      id,
-      {
-        width,
-        height,
-        fraction,
-        grid,
-        fin_type,
-        glass_type,
-        color,
-        tempering_options,
-        side_window,
-        installation_option,
-        instruction_qustion,
-        images: imagePaths,
-        createdBy,
-        price,
-      },
-      { new: true }
-    );
-
-    res.status(200).json({
-      statusCode: 200,
-      status: "success",
-      message: "Door product updated successfully",
-      data: updatedDoor,
-    });
-  } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({
-      statusCode: 500,
-      status: "error",
-      message: "Error updating product",
-      error: error.message,
-    });
-  }
-};
 
 const allDoorsProduct = async (req, res) => {
   try {
@@ -216,10 +148,72 @@ const deleteDoorsProduct = async (req, res) => {
   }
 };
 
+const updateDoorsProduct = async (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+
+    try {
+      const { id } = req.params; // Extract the ID from the URL parameters
+      const {
+        productName,
+        categoryName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+      } = req.body;
+
+      // Retrieve existing door product
+      const existingDoor = await doorsModel.findById(id);
+      if (!existingDoor) {
+        return res.status(404).json({
+          statusCode: 404,
+          status: "error",
+          message: "Product not found",
+        });
+      }
+
+      // Handle images: Update only if new images are uploaded
+      let images = existingDoor.images; // Keep existing images by default
+      if (req.files && req.files.length > 0) {
+        images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+      }
+
+      // Update the door product with the new data
+      const updatedDoor = await doorsModel.findByIdAndUpdate(
+        id,
+        {
+          productName,
+          categoryName,
+          price,
+          description,
+          subCategory,
+          subSubCategory,
+          images
+        },
+        { new: true } // Return the updated document
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        data: updatedDoor
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
 module.exports = {
   createDoorss,
   allDoorsProduct,
   doosProductById,
-  updateDoors,
   deleteDoorsProduct,
+  updateDoorsProduct
 };
