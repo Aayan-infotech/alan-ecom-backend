@@ -168,7 +168,7 @@ const updateDoorsProduct = async (req, res, next) => {
         subSubCategory,
       } = req.body;
 
-      // Retrieve existing door product
+
       const existingDoor = await doorsModel.findById(id);
       if (!existingDoor) {
         return res.status(404).json({
@@ -178,13 +178,13 @@ const updateDoorsProduct = async (req, res, next) => {
         });
       }
 
-      // Handle images: Update only if new images are uploaded
-      let images = existingDoor.images; // Keep existing images by default
+      
+      let images = existingDoor.images; 
       if (req.files && req.files.length > 0) {
         images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
       }
 
-      // Update the door product with the new data
+
       const updatedDoor = await doorsModel.findByIdAndUpdate(
         id,
         {
