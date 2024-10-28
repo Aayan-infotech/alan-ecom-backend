@@ -97,9 +97,70 @@ const deleteWindows = async (req, res) => {
   }
 }
 
+const updateWindowsProduct = async (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+
+    try {
+      const { id } = req.params;
+      const {
+        productName,
+        categoryName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+      } = req.body;
+
+      const existingWindow = await Windows.findById(id);
+      if (!existingWindow) {
+        return res.status(404).json({
+          statusCode: 404,
+          status: "error",
+          message: "Product not found",
+        });
+      }
+
+      let images = existingWindow.images; 
+      if (req.files && req.files.length > 0) {
+        images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+      }
+
+      const updatedWindow = await Windows.findByIdAndUpdate(
+        id,
+        {
+          productName,
+          categoryName,
+          price,
+          description,
+          subCategory,
+          subSubCategory,
+          images
+        },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        data: updatedWindow
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
+
 module.exports = {
     createWindows,
     getAllWindows,
-    deleteWindows
+    deleteWindows,
+    updateWindowsProduct
 }
 
