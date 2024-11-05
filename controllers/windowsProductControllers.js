@@ -4,7 +4,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 5 }, 
+  limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: function (req, file, cb) {
     const filetypes = /jpeg|jpg|png|gif/;
     const mimetype = filetypes.test(file.mimetype);
@@ -26,73 +26,88 @@ const upload = multer({
       cb(new Error('Error: Images Only!'));
     }
   }
-}).array('images', 10); 
+}).array('images', 10);
 
 const createWindows = async (req, res, next) => {
   upload(req, res, async (err) => {
-      if (err) {
-          return res.status(400).json({
-              success: false,
-              message: err.message
-          });
-      }
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
 
-      try {
-          const {
-            productName,
-            price,
-            description,
-            subCategory,
-            subSubCategory,
-          } = req.body;
+    try {
+      const {
+        productName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+      } = req.body;
 
-      
-          const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
-          const newwindowsModel = new Windows({
-            productName,
-            price,
-            description,
-            subCategory,
-            subSubCategory,
-            images
-          });
+      const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
-          const savedwindowsModel = await newwindowsModel.save();
+      const newwindowsModel = new Windows({
+        productName,
+        price,
+        description,
+        subCategory,
+        subSubCategory,
+        images
+      });
 
-          res.status(200).json({
-              success: true,
-              message: "Stylist created successfully",
-              data: savedwindowsModel
-          });
-      } catch (error) {
-          next(error);
-      }
+      const savedwindowsModel = await newwindowsModel.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Stylist created successfully",
+        data: savedwindowsModel
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 };
 
-const getAllWindows = async(req, res) => {
-  try{
+const addDimensions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { width, height, fraction, gridOptions, finType, glassType, lockType,
+      color, temperingOptions, sideWindowOpens, installationOption, instructionQuestion } = req.body;
+
+    const existingWindow = await Windows.findByIdAndUpdate(id, { width, height, fraction, gridOptions, finType, glassType, lockType,
+      color, temperingOptions, sideWindowOpens, installationOption, instructionQuestion }, { new: true });
+
+    res.status(201).json({ message: "dimensions added successfully", dimensions: existingWindow });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add dimensions" });
+  }
+};
+
+const getAllWindows = async (req, res) => {
+  try {
     const windowsdata = await Windows.find();
     res.status(200).json({
       statusCode: 200,
       status: "success",
       data: windowsdata,
     });
-  }catch(error){
+  } catch (error) {
     console.error(error);
   }
 }
 
 const deleteWindows = async (req, res) => {
-  try{
-    const {id} = req.params
+  try {
+    const { id } = req.params
     const window = await Windows.findByIdAndDelete(id);
     res.status(200).json({
       message: "Window Deleted successfully",
       data: window
     })
-  }catch(error){
+  } catch (error) {
     console.error(error);
   }
 }
@@ -126,7 +141,7 @@ const updateWindowsProduct = async (req, res, next) => {
         });
       }
 
-      let images = existingWindow.images; 
+      let images = existingWindow.images;
       if (req.files && req.files.length > 0) {
         images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
       }
@@ -158,9 +173,10 @@ const updateWindowsProduct = async (req, res, next) => {
 
 
 module.exports = {
-    createWindows,
-    getAllWindows,
-    deleteWindows,
-    updateWindowsProduct
+  createWindows,
+  addDimensions,
+  getAllWindows,
+  deleteWindows,
+  updateWindowsProduct
 }
 

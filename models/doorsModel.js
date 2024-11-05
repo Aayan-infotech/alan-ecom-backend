@@ -25,39 +25,59 @@ const doorsModel = new mongoose.Schema({
     type: String,
     required: false,
   },
-  fraction: {
+  frameWidthAndHeight: {
     type: String,
     required: false,
   },
-  grid: {
+  addPrefinish: {
     type: String,
     required: false,
   },
-  fin_type: {
+  doorSwingDirection: {
     type: String,
     required: false,
   },
-  glass_type: {
+  jampSize: {
     type: String,
     required: false,
   },
-  color: {
+  sill: {
     type: String,
     required: false,
   },
-  tempering_options: {
+  doorShoe: {
     type: String,
     required: false,
   },
-  side_window: {
+  weatherstrip: {
     type: String,
     required: false,
   },
-  installation_option: {
+  boreOptions: {
     type: String,
     required: false,
   },
-  instruction_qustion: {
+  hinges: {
+    type: String,
+    required: false,
+  },
+  hinges: {
+    type: String,
+    required: false,
+  },
+  preHungOptions: {
+    type: String,
+    required: false,
+  },
+  caulkingOption: {
+    type: String,
+    required: false,
+  },
+  installationOption: {
+    type: String,
+    required: false,
+  },
+  instructionQuestion: {
     type: String,
     required: false,
   },

@@ -8,15 +8,15 @@ const windowsModel = new mongoose.Schema({
   },
   productName: {
     type: String,
-    required: true,
+    required: false,
   },
   price: {
     type: Number,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   subCategory: {
     type: String,
@@ -27,47 +27,51 @@ const windowsModel = new mongoose.Schema({
     required: false,
   },
   width: {
-    type: String,
+    type: [String],
     required: false,
   },
   height: {
-    type: String,
+    type: [String],
     required: false,
   },
   fraction: {
-    type: String,
+    type: [String],
     required: false,
   },
-  grid: {
-    type: String,
+  gridOptions: {
+    type: [String],
     required: false,
   },
-  fin_type: {
-    type: String,
+  finType: {
+    type: [String],
     required: false,
   },
-  glass_type: {
-    type: String,
+  glassType: {
+    type: [String],
+    required: false,
+  },
+  lockType: {
+    type: [String],
     required: false,
   },
   color: {
-    type: String,
+    type: [String],
     required: false,
   },
-  tempering_options: {
-    type: String,
+  temperingOptions: {
+    type: [String],
     required: false,
   },
-  side_window: {
-    type: String,
+  sideWindowOpens: {
+    type: [String],
     required: false,
   },
-  installation_option: {
-    type: String,
+  installationOption: {
+    type: [String],
     required: false,
   },
-  instruction_qustion: {
-    type: String,
+  instructionQuestion: {
+    type: [String],
     required: false,
   },
   images: {
