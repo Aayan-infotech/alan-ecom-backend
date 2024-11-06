@@ -73,6 +73,21 @@ const createDoorss = async (req, res, next) => {
   });
 };
 
+const addDimensions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { frameWidthAndHeight, addPrefinish, doorSwingDirection, jampSize, sill, doorShoe, weatherstrip,
+      boreOptions, hinges, preHungOptions, caulkingOption, installationOption} = req.body;
+
+    const existingWindow = await Windows.findByIdAndUpdate(id, { frameWidthAndHeight, addPrefinish, doorSwingDirection, jampSize, sill, 
+      doorShoe, weatherstrip, boreOptions, hinges, preHungOptions, caulkingOption, installationOption }, { new: true });
+
+    res.status(201).json({ message: "dimensions added successfully", dimensions: existingWindow });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add dimensions" });
+  }
+};
+
 
 
 const allDoorsProduct = async (req, res) => {
@@ -212,6 +227,7 @@ const updateDoorsProduct = async (req, res, next) => {
 
 module.exports = {
   createDoorss,
+  addDimensions,
   allDoorsProduct,
   doosProductById,
   deleteDoorsProduct,

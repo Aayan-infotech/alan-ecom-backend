@@ -61,10 +61,6 @@ const doorsModel = new mongoose.Schema({
     type: String,
     required: false,
   },
-  hinges: {
-    type: String,
-    required: false,
-  },
   preHungOptions: {
     type: String,
     required: false,
