@@ -38,6 +38,7 @@ const OrderRoutes = require("./routes/orderRoute");
 const DoorRoutes = require("./routes/doorsRoute")
 const AppointmentRoutes = require("./routes/appointmentRoute");
 const WindowsRoute = require("./routes/windowsRoute");
+const EstimateRoute = require("./routes/estimateRoute");
 
 // app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -46,6 +47,7 @@ app.use("/api/doors", DoorRoutes);
 app.use("/api/orders", OrderRoutes);
 app.use("/api/appointments", AppointmentRoutes);
 app.use("/api/windows", WindowsRoute);
+app.use("/api/estimate", EstimateRoute);
 
 // Start Server
 app.listen(PORT, () => {
