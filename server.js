@@ -16,6 +16,9 @@ if (!fs.existsSync(uploadDir)) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(express.urlencoded({ extended: true }));
+
+
 app.use('/uploads', express.static('uploads'));
 
 app.use(cors());
@@ -38,6 +41,8 @@ const OrderRoutes = require("./routes/orderRoute");
 const DoorRoutes = require("./routes/doorsRoute")
 const AppointmentRoutes = require("./routes/appointmentRoute");
 const WindowsRoute = require("./routes/windowsRoute");
+const EstimateRoute = require("./routes/estimateRoute");
+const PersonalDetailsRoute = require("./routes/personalDetailsRoute");
 
 // app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -46,6 +51,8 @@ app.use("/api/doors", DoorRoutes);
 app.use("/api/orders", OrderRoutes);
 app.use("/api/appointments", AppointmentRoutes);
 app.use("/api/windows", WindowsRoute);
+app.use("/api/estimate", EstimateRoute);
+app.use("/api/personalDetails", PersonalDetailsRoute);
 
 // Start Server
 app.listen(PORT, () => {
