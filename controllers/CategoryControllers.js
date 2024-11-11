@@ -171,9 +171,10 @@ const deleteSubSubCategory = async (req, res) => {
 };
 
 
-const getCategoryById = async (req, res) => {
+const getCategoryByName = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const { name } = req.params;
+    const category = await Category.find({categoryName:name});
     if (!category) return res.status(404).json({ message: 'Category not found' });
     res.status(200).json(category);
   } catch (error) {
@@ -202,7 +203,7 @@ module.exports = {
   addCategory,
   addSubCategory,
   getAllCategories,
-  getCategoryById,
+  getCategoryByName,
   updateCategory,
   addSubSubcategory,
   deletecategory,
