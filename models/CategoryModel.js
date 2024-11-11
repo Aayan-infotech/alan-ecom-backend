@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const SubSubcategorySchema = new Schema({
-  subSubcategoryName: { // Change this to subSubcategoryName
+  subSubcategoryName: {
     type: String,
-    required: false // Make this required if you want to enforce it
+    required: false 
   }
 });
 
 const SubcategorySchema = new Schema({
   subcategoryName: {
     type: String,
-    required: false // Also make this required
+    required: false 
   },
   subSubcategories: [SubSubcategorySchema]
 });

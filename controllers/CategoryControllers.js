@@ -1,7 +1,27 @@
 
 const Category = require('../models/CategoryModel');
 
-const createSubCategory = async (req, res) => {
+const addCategory = async (req, res) => {
+  try{
+    const { categoryName } = req.body;
+    if (!categoryName) {
+      return res.status(400).json({ message: "Category name is required." });
+    }
+    const category = new Category({
+      categoryName,
+      subcategories: []
+    });
+
+    const savedCategory = await category.save();
+    res.status(201).json({savedCategory});
+
+  }catch(error){
+    console.error('Error adding/updating category:', error);
+    return res.status(500).json({ message: 'Error adding/updating category', error });
+  }
+}
+
+const addSubCategory = async (req, res) => {
   try {
     const { categoryName, subcategoryName } = req.body;
 
@@ -9,11 +29,8 @@ const createSubCategory = async (req, res) => {
       return res.status(400).json({ message: "Category name and subcategory name are required." });
     }
 
-    if (!['Doors', 'Windows'].includes(categoryName)) {
-      return res.status(400).json({ message: 'Category name must be either "Doors" or "Windows".' });
-    }
-
     let category = await Category.findOne({ categoryName });
+    console.log(category)
 
     if (category) {
       category.subcategories.push({
@@ -39,10 +56,6 @@ const createSubCategory = async (req, res) => {
 const addSubSubcategory = async (req, res) => {
   try {
     const { categoryName, subcategoryName, subSubcategoryName } = req.body;
-
-    if (!['Doors', 'Windows'].includes(categoryName)) {
-      return res.status(400).json({ message: 'Category name must be either "Doors" or "Windows".' });
-    }
 
     let category = await Category.findOne({ categoryName });
 
@@ -78,6 +91,19 @@ const getAllCategories = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const deletecategory = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const category = await Category.findByIdAndDelete(id);
+    res.status(200).json({
+      message: "Deleted sucessfully",
+      data: category 
+    })
+  }catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
 
 const deleteSubCategory = async (req, res) => {
   try {
@@ -173,11 +199,13 @@ const updateCategory = async (req, res) => {
 };
 
 module.exports = {
-  createSubCategory,
+  addCategory,
+  addSubCategory,
   getAllCategories,
   getCategoryById,
   updateCategory,
-  deleteSubCategory,
   addSubSubcategory,
+  deletecategory,
+  deleteSubCategory,
   deleteSubSubCategory
 }
