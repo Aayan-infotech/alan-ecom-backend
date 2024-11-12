@@ -2,9 +2,9 @@ const Appointment = require('../models/appointmentModel');
 
 const createAppointment = async (req, res) => {
     try {
-        const { event, startDate, endDate } = req.body;
+        const { fullName, email, mobile, message, date } = req.body;
 
-        if (!startDate || !endDate) {
+        if (!fullName || !email || !mobile || !message || !date) {
             return res.status(400).json({
                 statusCode: 400,
                 status: "error",
@@ -13,9 +13,11 @@ const createAppointment = async (req, res) => {
         }
 
         const newAppointment = new Appointment({
-            event,
-            startDate,
-            endDate
+            fullName,
+            email,
+            mobile,
+            message,
+            date
         })
 
         const savedAppointment = await newAppointment.save();
@@ -45,7 +47,37 @@ const getAppointments = async (req, res) => {
     }
 }
 
+const getAppointmentsById = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const appointmentData = await Appointment.findById(id);
+        res.status(200).json({
+            statusCode: 200,
+            status: "success",
+            data: appointmentData
+        })
+    }catch(error){
+        console.error(error);
+    }
+}
+
+const deleteAppointment = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const details = await Appointment.findByIdAndDelete(id);
+        res.status(200).json({
+            statusCode: 200,
+            status: "success",
+            data: details
+        });
+    }catch(error){
+        console.error(error);
+    }
+}
+
 module.exports = {
     createAppointment,
-    getAppointments
+    getAppointments,
+    getAppointmentsById,
+    deleteAppointment
 }

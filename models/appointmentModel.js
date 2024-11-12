@@ -1,16 +1,23 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-  event: {
+  fullName: {
     type: String,
-    default: "Appointment",
     required: false
   },
-  startDate: {
-    type: Date,
+  email: {
+    type: String,
     required: true
   },
-  endDate: {
+  mobile: {
+    type: String,
+    required: true
+  },
+  message: {
+    type: String,
+    required: true
+  },
+  date: {
     type: Date,
     required: true
   }
