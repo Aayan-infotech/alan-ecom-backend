@@ -1,86 +1,146 @@
-
 const Category = require('../models/CategoryModel');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 5 },
+  fileFilter: function (req, file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Error: Images Only!'));
+    }
+  }
+}).single('image');
 
 const addCategory = async (req, res) => {
-  try{
-    const { categoryName } = req.body;
-    if (!categoryName) {
-      return res.status(400).json({ message: "Category name is required." });
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
     }
-    const category = new Category({
-      categoryName,
-      subcategories: []
-    });
 
-    const savedCategory = await category.save();
-    res.status(201).json({savedCategory});
+    try {
+      const { categoryName } = req.body;
 
-  }catch(error){
-    console.error('Error adding/updating category:', error);
-    return res.status(500).json({ message: 'Error adding/updating category', error });
-  }
-}
+      if (!categoryName) {
+        return res.status(400).json({ message: "Category name is required." });
+      }
+
+      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+
+      const category = new Category({
+        categoryName,
+        image: imageUrl, 
+        subcategories: []
+      });
+
+      const savedCategory = await category.save();
+
+      res.status(201).json({ success: true, data: savedCategory });
+    } catch (error) {
+      console.error('Error adding/updating category:', error);
+      return res.status(500).json({ message: 'Error adding/updating category', error });
+    }
+  });
+};
 
 const addSubCategory = async (req, res) => {
-  try {
-    const { categoryName, subcategoryName } = req.body;
-
-    if (!categoryName || !subcategoryName) {
-      return res.status(400).json({ message: "Category name and subcategory name are required." });
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
     }
 
-    let category = await Category.findOne({ categoryName });
-    console.log(category)
+    try {
+      const { categoryName, subcategoryName } = req.body;
 
-    if (category) {
-      category.subcategories.push({
-        subcategoryName
-      });
-    } else {
-      category = new Category({
-        categoryName,
-        subcategories: [{
-          subcategoryName
-        }],
-      });
+      if (!categoryName || !subcategoryName) {
+        return res.status(400).json({ message: "Category name and subcategory name are required." });
+      }
+
+      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+
+      let category = await Category.findOne({ categoryName });
+
+      if (category) {
+        category.subcategories.push({
+          subcategoryName,
+          image: imageUrl
+        });
+      } else {
+        category = new Category({
+          categoryName,
+          subcategories: [{
+            subcategoryName,
+            image: imageUrl
+          }],
+        });
+      }
+
+      const savedCategory = await category.save();
+      return res.status(201).json(savedCategory);
+    } catch (error) {
+      console.error('Error adding/updating category:', error);
+      return res.status(500).json({ message: 'Error adding/updating category', error });
     }
-
-    const savedCategory = await category.save();
-    return res.status(201).json(savedCategory);
-  } catch (error) {
-    console.error('Error adding/updating category:', error);
-    return res.status(500).json({ message: 'Error adding/updating category', error });
-  }
+  });
 };
+
 
 const addSubSubcategory = async (req, res) => {
-  try {
-    const { categoryName, subcategoryName, subSubcategoryName } = req.body;
-
-    let category = await Category.findOne({ categoryName });
-
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
     }
 
-    let subcategory = category.subcategories.find(sub => sub.subcategoryName === subcategoryName);
-    if (!subcategory) {
-      return res.status(404).json({ message: 'Subcategory not found' });
+    try {
+      const { categoryName, subcategoryName, subSubcategoryName } = req.body;
+
+      if (!subSubcategoryName || subSubcategoryName.trim() === '') {
+        return res.status(400).json({ message: 'Sub-subcategory name cannot be empty.' });
+      }
+
+      let category = await Category.findOne({ categoryName });
+
+      if (!category) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+
+      let subcategory = category.subcategories.find(sub => sub.subcategoryName === subcategoryName);
+      if (!subcategory) {
+        return res.status(404).json({ message: 'Subcategory not found' });
+      }
+
+      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+
+      subcategory.subSubcategories.push({
+        subSubcategoryName,
+        image: imageUrl 
+      });
+
+      const updatedCategory = await category.save();
+
+      res.status(200).json({ message: 'Sub-Subcategory added successfully', updatedCategory });
+    } catch (error) {
+      console.error('Error adding sub-subcategory:', error);
+      res.status(500).json({ message: 'Error adding sub-subcategory', error });
     }
-
-    if (subSubcategoryName && subSubcategoryName.trim() !== '') {
-      subcategory.subSubcategories.push({ subSubcategoryName });
-    } else {
-      return res.status(400).json({ message: 'Sub-subcategory name cannot be empty.' });
-    }
-
-    const updatedCategory = await category.save();
-
-    res.status(200).json({ message: 'Sub-Subcategory added successfully', updatedCategory });
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding sub-subcategory', error });
-  }
+  });
 };
+
 
 
 const getAllCategories = async (req, res) => {

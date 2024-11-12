@@ -5,6 +5,10 @@ const SubSubcategorySchema = new Schema({
   subSubcategoryName: {
     type: String,
     required: false 
+  },
+  image: {
+    type: String,
+    required: false 
   }
 });
 
@@ -13,6 +17,10 @@ const SubcategorySchema = new Schema({
     type: String,
     required: false 
   },
+  image: {
+    type: String,
+    required: false
+  },
   subSubcategories: [SubSubcategorySchema]
 });
 
@@ -20,6 +28,10 @@ const CategorySchema = new Schema({
   categoryName: {
     type: String,
     required: true
+  },
+  image: {
+    type: String,
+    required: false
   },
   subcategories: [SubcategorySchema]
 });
