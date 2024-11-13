@@ -6,8 +6,7 @@ const createEstimate = async (req, res) => {
 
         if (!name?.trim() || !email?.trim() || !mobile?.trim() || !message?.trim()) {
             return res.status(400).json({
-                statusCode: 400,
-                status: "error",
+                status: 400,
                 message: "All fields are required",
             });
         }
@@ -22,7 +21,7 @@ const createEstimate = async (req, res) => {
         const savedEstimate = await newEstimate.save();
 
         res.status(200).json({
-            success: true,
+            status: 200,
             message: "Estimate generated successfully",
             data: savedEstimate
         });
@@ -30,8 +29,7 @@ const createEstimate = async (req, res) => {
     } catch (error) {
         console.error("Error saving estimate:", error);
         res.status(500).json({
-            success: false,
-            message: "Server error, please try again later."
+            message: error.message
         });
     }
 };
@@ -41,13 +39,13 @@ const getAllEstimates = async (req, res) => {
     try {
         const estimates = await Estimate.find();
         res.status(200).json({
-            success: true,
+            status: 200,
+            message: "All Estimates Details",
             data: estimates
         });
     } catch (error) {
         console.error("Error fetching estimates:", error);
         res.status(500).json({
-            success: false,
             message: "Server error, please try again later."
         });
     }
@@ -60,19 +58,19 @@ const getEstimateById = async (req, res) => {
 
         if (!estimate) {
             return res.status(404).json({
-                success: false,
                 message: "Estimate not found"
             });
         }
 
         res.status(200).json({
-            success: true,
+            status: 200,
+            message: "Estimate Details",
             data: estimate
         });
     } catch (error) {
         console.error("Error fetching estimate by ID:", error);
         res.status(500).json({
-            success: false,
+            status: 500,
             message: "Server error, please try again later."
         });
     }
@@ -85,21 +83,19 @@ const deleteEstimateById = async (req, res) => {
 
         if (!deletedEstimate) {
             return res.status(404).json({
-                success: false,
                 message: "Estimate not found"
             });
         }
 
         res.status(200).json({
-            success: true,
+            status: 200,
             message: "Estimate deleted successfully",
             data: deletedEstimate
         });
     } catch (error) {
         console.error("Error deleting estimate:", error);
         res.status(500).json({
-            success: false,
-            message: "Server error, please try again later."
+            message: error.message
         });
     }
 };
