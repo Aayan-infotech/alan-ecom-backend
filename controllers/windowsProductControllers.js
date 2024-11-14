@@ -74,13 +74,48 @@ const createWindows = async (req, res, next) => {
 const addDimensions = async (req, res) => {
   try {
     const { id } = req.params;
-    const { width, height, fraction, gridOptions, finType, glassType, lockType,
-      color, temperingOptions, sideWindowOpens, installationOption, instructionQuestion } = req.body;
+    const {
+      width,
+      height,
+      fraction,
+      gridOptions,
+      finType,
+      glassType,
+      lockType,
+      color,
+      temperingOptions,
+      sideWindowOpens,
+      installationOption,
+      instructionQuestion
+    } = req.body;
 
-    const existingWindow = await Windows.findByIdAndUpdate(id, { width, height, fraction, gridOptions, finType, glassType, lockType,
-      color, temperingOptions, sideWindowOpens, installationOption, instructionQuestion }, { new: true });
+    const updatedDimensions = {
+      width,
+      height,
+      fraction,
+      gridOptions,
+      finType,
+      glassType,
+      lockType,
+      color,
+      temperingOptions,
+      sideWindowOpens,
+      installationOption,
+      instructionQuestion
+    };
 
-    res.status(201).json({ message: "dimensions added successfully", dimensions: existingWindow });
+    const existingWindow = await Windows.findByIdAndUpdate(
+      id,
+      { $set: updatedDimensions },
+      { new: true }
+    );
+
+    res.status(200).json(
+      { 
+        status: 200,
+        message: "Dimensions added successfully", 
+        data: existingWindow,
+      });
   } catch (error) {
     res.status(500).json({ error: "Failed to add dimensions" });
   }
@@ -98,6 +133,7 @@ const getAllWindows = async (req, res) => {
     console.error(error);
   }
 }
+
 
 const deleteWindows = async (req, res) => {
   try {
