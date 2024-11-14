@@ -4,7 +4,6 @@ const windowsModel = new mongoose.Schema({
   categoryName: {
     type: String,
     required: false,
-    default: "Windows",
   },
   productName: {
     type: String,
@@ -27,51 +26,102 @@ const windowsModel = new mongoose.Schema({
     required: false,
   },
   width: {
-    type: [String],
+    type: [
+      {
+        width: String,
+        price: Number
+      }
+    ],
     required: false,
   },
   height: {
-    type: [String],
+    type: [
+      {
+        height: String,
+        price: Number
+      }
+    ],
     required: false,
   },
   fraction: {
-    type: [String],
+    type: [
+      {
+        fraction: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   gridOptions: {
-    type: [String],
+    type: [
+      {
+        gridOptions: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   finType: {
-    type: [String],
+    type: [
+      {
+        finType: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   glassType: {
-    type: [String],
+    type: [
+      {
+        glassType: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   lockType: {
-    type: [String],
+    type: [
+      {
+        lockType: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   color: {
-    type: [String],
+    type: [
+      {
+        color: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   temperingOptions: {
-    type: [String],
+    type: [
+      {
+        temperingOptions: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   sideWindowOpens: {
-    type: [String],
+    type: [
+      {
+        sideWindowOpens: String,
+        price: { type: Number, required: false },
+      },
+    ],
     required: false,
   },
   installationOption: {
-    type: [String],
-    required: false,
-  },
-  instructionQuestion: {
-    type: [String],
+    type: [
+      {
+        installationOption: String,
+        price: Number
+      },
+    ],
     required: false,
   },
   images: {
@@ -82,6 +132,6 @@ const windowsModel = new mongoose.Schema({
     type: Date,
     default: Date.now,
   }
-});
+  });
 
 module.exports = mongoose.model("windows", windowsModel);
