@@ -145,7 +145,7 @@ const addSubSubcategory = async (req, res) => {
 
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().select('categoryName image');
     res.status(200).json({
       status: 200,
       message: "All Category",
@@ -160,11 +160,21 @@ const getAllSubCategories = async (req, res) => {
   try {
     const { id } = req.params
     const category = await Category.findById(id)
-    const subcategory = category.subcategories;
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const subcategories = category.subcategories.map(subcategory => ({
+      _id: subcategory._id,
+      subcategoryName: subcategory.subcategoryName,
+      image: subcategory.image
+    }));
+
     res.status(200).json({
       status: 200,
       message: `Subcategories fetched successfully for ${category.categoryName}`,
-      data: subcategory
+      data: subcategories
     })
   } catch (error) {
     res.status(500).json({ error: error.message })
