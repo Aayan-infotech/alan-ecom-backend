@@ -127,17 +127,24 @@ const addDimensions = async (req, res) => {
 
 const getAllWindows = async (req, res) => {
   try {
-    const windowsdata = await Windows.find();
+    const windowsdata = await Windows.find().select(
+      "productName price description subCategory subSubCategory images"
+    );
+
     res.status(200).json({
-      statusCode: 200,
-      status: "success",
+      status: 200,
+      message: "Windows data fetched successfully",
       data: windowsdata,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching windows data:", error.message);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to fetch windows data",
+      error: error.message,
+    });
   }
-}
-
+};
 
 const deleteWindows = async (req, res) => {
   try {
@@ -210,17 +217,27 @@ const updateWindowsProduct = async (req, res, next) => {
   });
 };
 
-const getDimension = async (req, res) => {
-  try{
+const getDimensions = async (req, res) => {
+  try {
     const { id } = req.params;
-    const window = Windows.findById(id);
-    dimensionData = window.dimensions
-  }catch(error){
-    res.status(500).json({
-      error: error.message
-    })
+    const window = await Windows.findById(id);
+
+    if (!window) {
+      return res.status(404).json({ error: "Window not found" });
+    }
+
+    const dimensions = window.dimensions;
+
+    res.status(200).json({
+      status: 200,
+      message: "Dimensions fetched successfully",
+      data: dimensions,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
 
 
 module.exports = {
@@ -228,6 +245,7 @@ module.exports = {
   addDimensions,
   getAllWindows,
   deleteWindows,
-  updateWindowsProduct
+  updateWindowsProduct,
+  getDimensions
 }
 
