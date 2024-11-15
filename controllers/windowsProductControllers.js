@@ -106,9 +106,13 @@ const addDimensions = async (req, res) => {
 
     const existingWindow = await Windows.findByIdAndUpdate(
       id,
-      { $set: updatedDimensions },
+      {  $set: { dimensions: updatedDimensions } },
       { new: true }
     );
+
+    if (!existingWindow) {
+      return res.status(404).json({ error: "Window not found" });
+    }
 
     res.status(200).json(
       { 
@@ -171,8 +175,7 @@ const updateWindowsProduct = async (req, res, next) => {
       const existingWindow = await Windows.findById(id);
       if (!existingWindow) {
         return res.status(404).json({
-          statusCode: 404,
-          status: "error",
+          status: 404,
           message: "Product not found",
         });
       }
@@ -206,6 +209,18 @@ const updateWindowsProduct = async (req, res, next) => {
     }
   });
 };
+
+const getDimension = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const window = Windows.findById(id);
+    dimensionData = window.dimensions
+  }catch(error){
+    res.status(500).json({
+      error: error.message
+    })
+  }
+}
 
 
 module.exports = {
