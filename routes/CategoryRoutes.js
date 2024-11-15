@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllCategories, addSubCategory, deleteSubCategory, addSubSubcategory, deleteSubSubCategory, addCategory, deletecategory, getCategoryByName, getAllSubCategories, getAllSubSubCategories } = require('../controllers/CategoryControllers');
+const { getAllProductCategories, addSubCategory, deleteSubCategory, addSubSubcategory, deleteSubSubCategory, addCategory, deletecategory, getCategoryByName, getAllSubCategories, getAllSubSubCategories, getAllCategories } = require('../controllers/CategoryControllers');
 
 const router = express.Router();
 
@@ -7,6 +7,7 @@ router.post('/addcategory', addCategory);
 router.post('/addsubcategory', addSubCategory);
 router.post('/addsubsubcategory', addSubSubcategory);
 router.get('/getcategory/:name', getCategoryByName);
+router.get('/product', getAllProductCategories);
 router.get('/', getAllCategories);
 router.get('/get-subcategory/:id', getAllSubCategories)
 router.get('/get-subsubcategory/category/:categoryID/subcategory/:subcategoryID', getAllSubSubCategories)
