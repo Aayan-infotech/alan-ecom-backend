@@ -9,6 +9,10 @@ const SubSubcategorySchema = new Schema({
   image: {
     type: String,
     required: false 
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   }
 });
 
@@ -21,6 +25,10 @@ const SubcategorySchema = new Schema({
     type: String,
     required: false
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   subSubcategories: [SubSubcategorySchema]
 });
 
@@ -32,6 +40,10 @@ const CategorySchema = new Schema({
   image: {
     type: String,
     required: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
   subcategories: [SubcategorySchema]
 });

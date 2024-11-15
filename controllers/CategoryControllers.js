@@ -50,7 +50,12 @@ const addCategory = async (req, res) => {
 
       const savedCategory = await category.save();
 
-      res.status(201).json({ success: true, data: savedCategory });
+      res.status(200).json({ 
+        success: true, 
+        status: 200,
+        message: "Category created successfully",
+        data: savedCategory 
+      });
     } catch (error) {
       console.error('Error adding/updating category:', error);
       return res.status(500).json({ message: 'Error adding/updating category', error });
@@ -91,7 +96,12 @@ const addSubCategory = async (req, res) => {
       }
 
       const savedCategory = await category.save();
-      return res.status(201).json(savedCategory);
+      return res.status(200).json({
+        status: 200,
+        success: true,
+        message: "Sub-Category created successfully",
+        data: savedCategory
+      });
     } catch (error) {
       console.error('Error adding/updating category:', error);
       return res.status(500).json({ message: 'Error adding/updating category', error });
@@ -133,7 +143,12 @@ const addSubSubcategory = async (req, res) => {
 
       const updatedCategory = await category.save();
 
-      res.status(200).json({ message: 'Sub-Subcategory added successfully', updatedCategory });
+      res.status(200).json({ 
+        status: 200,
+        success: true,
+        message: 'Sub-Subcategory added successfully',
+        data: updatedCategory 
+      });
     } catch (error) {
       console.error('Error adding sub-subcategory:', error);
       res.status(500).json({ message: 'Error adding sub-subcategory', error });
@@ -148,6 +163,7 @@ const getAllProductCategories = async (req, res) => {
     const categories = await Category.find().select('categoryName image');
     res.status(200).json({
       status: 200,
+      success: true,
       message: "All Category",
       data: categories
     });
@@ -161,6 +177,7 @@ const getAllCategories = async (req, res) => {
     const categories = await Category.find()
     res.status(200).json({
       status: 200,
+      success: true,
       message: "All Category",
       data: categories
     });
@@ -186,6 +203,7 @@ const getAllSubCategories = async (req, res) => {
 
     res.status(200).json({
       status: 200,
+      success: true,
       message: `Subcategories fetched successfully for ${category.categoryName}`,
       data: subcategories
     })
@@ -212,6 +230,7 @@ const getAllSubSubCategories = async (req, res) => {
     const subSubcategories = category.subcategories[0].subSubcategories;
     res.status(200).json({
       status: 200,
+      success: true,
       message: "Subsubcategory Data fetched successfully",
       data: subSubcategories
     })
@@ -225,6 +244,8 @@ const deletecategory = async (req, res) => {
     const { id } = req.params;
     const category = await Category.findByIdAndDelete(id);
     res.status(200).json({
+      success: true,
+      status:200,
       message: "Deleted sucessfully",
       data: category
     })
@@ -245,7 +266,12 @@ const deleteSubCategory = async (req, res) => {
 
     await category.save();
 
-    res.status(200).json({ message: 'Subcategory deleted successfully' });
+    res.status(200).json({ 
+      status: 200,
+      success: true,
+      data:category,
+      message: 'Subcategory deleted successfully'
+     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -288,6 +314,8 @@ const deleteSubSubCategory = async (req, res) => {
     await category.save();
 
     res.status(200).json({
+      status: 200,
+      success: true,
       message: 'Sub-subcategory deleted successfully',
     });
   } catch (error) {
@@ -304,7 +332,12 @@ const getCategoryByName = async (req, res) => {
     const { name } = req.params;
     const category = await Category.find({ categoryName: name });
     if (!category) return res.status(404).json({ message: 'Category not found' });
-    res.status(200).json(category);
+    res.status(200).json({
+      status:200,
+      success: true,
+      message: "Category fetched by name successfully",
+      data:category
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -321,7 +354,12 @@ const updateCategory = async (req, res) => {
       { new: true }
     );
     if (!updatedCategory) return res.status(404).json({ message: 'Category not found' });
-    res.status(200).json(updatedCategory);
+    res.status(200).json({
+      status:200,
+      success: true,
+      message: "Updated",
+      data:updatedCategory
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

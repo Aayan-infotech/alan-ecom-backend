@@ -29,6 +29,10 @@ const windowsModel = new mongoose.Schema({
     type: Array,
     required: false,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   dimensions:{
     width: {
       type: [
@@ -128,6 +132,10 @@ const windowsModel = new mongoose.Schema({
         },
       ],
       required: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   createdAt: {
