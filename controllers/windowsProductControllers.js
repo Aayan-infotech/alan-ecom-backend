@@ -61,6 +61,7 @@ const createWindows = async (req, res, next) => {
       const savedwindowsModel = await newwindowsModel.save();
 
       res.status(200).json({
+        status: 200,
         success: true,
         message: "Stylist created successfully",
         data: savedwindowsModel
@@ -117,6 +118,7 @@ const addDimensions = async (req, res) => {
     res.status(200).json(
       { 
         status: 200,
+        success: true,
         message: "Dimensions added successfully", 
         data: existingWindow,
       });
@@ -133,6 +135,7 @@ const getAllWindows = async (req, res) => {
 
     res.status(200).json({
       status: 200,
+      success: true,
       message: "Windows data fetched successfully",
       data: windowsdata,
     });
@@ -151,6 +154,8 @@ const deleteWindows = async (req, res) => {
     const { id } = req.params
     const window = await Windows.findByIdAndDelete(id);
     res.status(200).json({
+      status: 200,
+      success: true,
       message: "Window Deleted successfully",
       data: window
     })
@@ -207,6 +212,7 @@ const updateWindowsProduct = async (req, res, next) => {
       );
 
       res.status(200).json({
+        status: 200,
         success: true,
         message: "Product updated successfully",
         data: updatedWindow
@@ -230,6 +236,7 @@ const getDimensions = async (req, res) => {
 
     res.status(200).json({
       status: 200,
+      success: true,
       message: "Dimensions fetched successfully",
       data: dimensions,
     });
