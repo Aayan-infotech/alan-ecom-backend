@@ -201,6 +201,10 @@ const getAllSubCategories = async (req, res) => {
       image: subcategory.image
     }));
 
+    if (subcategories.length === 0) {
+      return res.status(404).json({ message: 'Sub-Category not found' });
+    }
+
     res.status(200).json({
       status: 200,
       success: true,
@@ -228,6 +232,12 @@ const getAllSubSubCategories = async (req, res) => {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
     const subSubcategories = category.subcategories[0].subSubcategories;
+
+    if (subSubcategories.length === 0) {
+      return res.status(404).json({ message: 'Sub-Sub-Category not found' });
+    }
+
+
     res.status(200).json({
       status: 200,
       success: true,
