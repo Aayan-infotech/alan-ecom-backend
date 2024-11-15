@@ -143,9 +143,22 @@ const addSubSubcategory = async (req, res) => {
 
 
 
-const getAllCategories = async (req, res) => {
+const getAllProductCategories = async (req, res) => {
   try {
     const categories = await Category.find().select('categoryName image');
+    res.status(200).json({
+      status: 200,
+      message: "All Category",
+      data: categories
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find()
     res.status(200).json({
       status: 200,
       message: "All Category",
@@ -317,7 +330,7 @@ const updateCategory = async (req, res) => {
 module.exports = {
   addCategory,
   addSubCategory,
-  getAllCategories,
+  getAllProductCategories,
   getAllSubCategories,
   getAllSubSubCategories,
   getCategoryByName,
@@ -325,5 +338,6 @@ module.exports = {
   addSubSubcategory,
   deletecategory,
   deleteSubCategory,
+  getAllCategories,
   deleteSubSubCategory
 }
