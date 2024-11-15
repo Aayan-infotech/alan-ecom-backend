@@ -50,11 +50,11 @@ const addCategory = async (req, res) => {
 
       const savedCategory = await category.save();
 
-      res.status(200).json({ 
-        success: true, 
+      res.status(200).json({
+        success: true,
         status: 200,
         message: "Category created successfully",
-        data: savedCategory 
+        data: savedCategory
       });
     } catch (error) {
       console.error('Error adding/updating category:', error);
@@ -143,11 +143,11 @@ const addSubSubcategory = async (req, res) => {
 
       const updatedCategory = await category.save();
 
-      res.status(200).json({ 
+      res.status(200).json({
         status: 200,
         success: true,
         message: 'Sub-Subcategory added successfully',
-        data: updatedCategory 
+        data: updatedCategory
       });
     } catch (error) {
       console.error('Error adding sub-subcategory:', error);
@@ -192,7 +192,11 @@ const getAllSubCategories = async (req, res) => {
     const category = await Category.findById(id)
 
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'Category not found'
+      });
     }
 
     const subcategories = category.subcategories.map(subcategory => ({
@@ -202,7 +206,11 @@ const getAllSubCategories = async (req, res) => {
     }));
 
     if (subcategories.length === 0) {
-      return res.status(404).json({ message: 'Sub-Category not found' });
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'Sub-Category not found'
+      });
     }
 
     res.status(200).json({
@@ -229,12 +237,20 @@ const getAllSubSubCategories = async (req, res) => {
       }
     );
     if (!category || !category.subcategories || category.subcategories.length === 0) {
-      return res.status(404).json({ message: 'Subcategory not found' });
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'Subcategory not found'
+      });
     }
     const subSubcategories = category.subcategories[0].subSubcategories;
 
     if (subSubcategories.length === 0) {
-      return res.status(404).json({ message: 'Sub-Sub-Category not found' });
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'Sub-Sub-Category not found'
+      });
     }
 
 
@@ -255,7 +271,7 @@ const deletecategory = async (req, res) => {
     const category = await Category.findByIdAndDelete(id);
     res.status(200).json({
       success: true,
-      status:200,
+      status: 200,
       message: "Deleted sucessfully",
       data: category
     })
@@ -276,12 +292,12 @@ const deleteSubCategory = async (req, res) => {
 
     await category.save();
 
-    res.status(200).json({ 
+    res.status(200).json({
       status: 200,
       success: true,
-      data:category,
+      data: category,
       message: 'Subcategory deleted successfully'
-     });
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -295,6 +311,8 @@ const deleteSubSubCategory = async (req, res) => {
 
     if (!category) {
       return res.status(404).json({
+        status: 404,
+        success: false,
         message: 'Category not found',
       });
     }
@@ -305,6 +323,8 @@ const deleteSubSubCategory = async (req, res) => {
 
     if (!subcategory) {
       return res.status(404).json({
+        status: 404,
+        success: false,
         message: 'Subcategory not found',
       });
     }
@@ -315,6 +335,8 @@ const deleteSubSubCategory = async (req, res) => {
 
     if (subSubcategoryIndex === -1) {
       return res.status(404).json({
+        status: 404,
+        success: false,
         message: 'Sub-subcategory not found',
       });
     }
@@ -343,10 +365,10 @@ const getCategoryByName = async (req, res) => {
     const category = await Category.find({ categoryName: name });
     if (!category) return res.status(404).json({ message: 'Category not found' });
     res.status(200).json({
-      status:200,
+      status: 200,
       success: true,
       message: "Category fetched by name successfully",
-      data:category
+      data: category
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -365,10 +387,10 @@ const updateCategory = async (req, res) => {
     );
     if (!updatedCategory) return res.status(404).json({ message: 'Category not found' });
     res.status(200).json({
-      status:200,
+      status: 200,
       success: true,
       message: "Updated",
-      data:updatedCategory
+      data: updatedCategory
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
