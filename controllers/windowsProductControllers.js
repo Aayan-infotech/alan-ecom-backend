@@ -207,8 +207,9 @@ const updateWindowsProduct = async (req, res, next) => {
   upload(req, res, async (err) => {
     if (err) {
       return res.status(400).json({
+        status: 400,
         success: false,
-        message: err.message
+        message: err.message,
       });
     }
 
@@ -223,44 +224,53 @@ const updateWindowsProduct = async (req, res, next) => {
         subSubCategory,
       } = req.body;
 
+  
       const existingWindow = await Windows.findById(id);
       if (!existingWindow) {
         return res.status(404).json({
           status: 404,
+          success: false,
           message: "Product not found",
         });
       }
 
-      let images = existingWindow.images;
+    
+      let images = existingWindow.productDetails.images || [];
       if (req.files && req.files.length > 0) {
         images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
       }
 
+  
+      const updatedDetails = {
+        categoryName: categoryName || existingWindow.productDetails.categoryName,
+        productName: productName || existingWindow.productDetails.productName,
+        price: price || existingWindow.productDetails.price,
+        description: description || existingWindow.productDetails.description,
+        subCategory: subCategory || existingWindow.productDetails.subCategory,
+        subSubCategory: subSubCategory || existingWindow.productDetails.subSubCategory,
+        images,
+      };
+
+    
       const updatedWindow = await Windows.findByIdAndUpdate(
         id,
-        {
-          productName,
-          categoryName,
-          price,
-          description,
-          subCategory,
-          subSubCategory,
-          images
-        },
+        { productDetails: req.body },
         { new: true }
       );
 
+  
       res.status(200).json({
         status: 200,
         success: true,
         message: "Product updated successfully",
-        data: updatedWindow
+        data: updatedWindow,
       });
     } catch (error) {
       next(error);
     }
   });
 };
+
 
 const getDimensions = async (req, res) => {
   try {
