@@ -1,4 +1,5 @@
 const Category = require('../models/CategoryModel');
+const Windows = require('../models/windowsModel');
 const multer = require('multer');
 const path = require('path');
 
@@ -206,10 +207,22 @@ const getAllSubCategories = async (req, res) => {
     }));
 
     if (subcategories.length === 0) {
-      return res.status(404).json({
-        status: 404,
-        success: false,
-        message: 'Sub-Category not found'
+
+      const products = await Windows.find();
+
+      if (products.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          success: false,
+          message: 'No subcategories or products found for this category',
+        });
+      }
+
+      return res.status(200).json({
+        status: 200,
+        success: true,
+        message: `Products fetched successfully for category ${category.categoryName}`,
+        data: products,
       });
     }
 

@@ -39,6 +39,7 @@ const createWindows = async (req, res, next) => {
 
     try {
       const {
+        categoryName,
         productName,
         price,
         description,
@@ -50,12 +51,15 @@ const createWindows = async (req, res, next) => {
       const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
       const newwindowsModel = new Windows({
-        productName,
-        price,
-        description,
-        subCategory,
-        subSubCategory,
-        images
+        productDetails: {
+          categoryName,
+          productName,
+          price,
+          description,
+          subCategory,
+          subSubCategory,
+          images,
+        },
       });
 
       const savedwindowsModel = await newwindowsModel.save();
@@ -63,7 +67,7 @@ const createWindows = async (req, res, next) => {
       res.status(200).json({
         status: 200,
         success: true,
-        message: "Stylist created successfully",
+        message: "Product created successfully",
         data: savedwindowsModel
       });
     } catch (error) {
@@ -107,7 +111,7 @@ const addDimensions = async (req, res) => {
 
     const existingWindow = await Windows.findByIdAndUpdate(
       id,
-      {  $set: { dimensions: updatedDimensions } },
+      { $set: { dimensions: updatedDimensions } },
       { new: true }
     );
 
@@ -116,10 +120,10 @@ const addDimensions = async (req, res) => {
     }
 
     res.status(200).json(
-      { 
+      {
         status: 200,
         success: true,
-        message: "Dimensions added successfully", 
+        message: "Dimensions added successfully",
         data: existingWindow,
       });
   } catch (error) {
@@ -129,9 +133,15 @@ const addDimensions = async (req, res) => {
 
 const getAllWindows = async (req, res) => {
   try {
-    const windowsdata = await Windows.find().select(
-      "productName price description subCategory subSubCategory images"
-    );
+    const windowsdata = await Windows.find().select("productDetails");
+
+    if (!windowsdata) {
+      res.status(404).json({
+        status: 404,
+        success: true,
+        message: "Windows data fetched successfully"
+      });
+    }
 
     res.status(200).json({
       status: 200,
@@ -144,6 +154,35 @@ const getAllWindows = async (req, res) => {
     res.status(500).json({
       status: 500,
       message: "Failed to fetch windows data",
+      error: error.message,
+    });
+  }
+};
+
+const getWindowByID = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const window = await Windows.findById(id);
+
+    if (!window) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Product data fetched successfully",
+      data: window,
+    });
+  } catch (error) {
+    console.error("Error fetching Product by ID:", error.message);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to fetch Product by ID",
       error: error.message,
     });
   }
@@ -251,6 +290,7 @@ module.exports = {
   createWindows,
   addDimensions,
   getAllWindows,
+  getWindowByID,
   deleteWindows,
   updateWindowsProduct,
   getDimensions

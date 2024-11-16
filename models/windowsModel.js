@@ -1,37 +1,39 @@
 const mongoose = require("mongoose");
 
 const windowsModel = new mongoose.Schema({
-  categoryName: {
-    type: String,
-    required: false,
-  },
-  productName: {
-    type: String,
-    required: false,
-  },
-  price: {
-    type: Number,
-    required: false,
-  },
-  description: {
-    type: String,
-    required: false,
-  },
-  subCategory: {
-    type: String,
-    required: false,
-  },
-  subSubCategory: {
-    type: String,
-    required: false,
-  },
-  images: {
-    type: Array,
-    required: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  productDetails:{
+    categoryName: {
+      type: String,
+      required: false,
+    },
+    productName: {
+      type: String,
+      required: false,
+    },
+    price: {
+      type: Number,
+      required: false,
+    },
+    description: {
+      type: String,
+      required: false,
+    },
+    subCategory: {
+      type: String,
+      required: false,
+    },
+    subSubCategory: {
+      type: String,
+      required: false,
+    },
+    images: {
+      type: Array,
+      required: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   dimensions:{
     width: {
