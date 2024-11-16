@@ -221,7 +221,7 @@ const getAllSubCategories = async (req, res) => {
       return res.status(200).json({
         status: 200,
         success: true,
-        message: `Products fetched successfully for category ${category.categoryName}`,
+        message: `No subcategories and Products fetched successfully for category ${category.categoryName}`,
         data: products,
       });
     }
