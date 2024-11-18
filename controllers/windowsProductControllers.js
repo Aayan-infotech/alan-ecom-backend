@@ -226,7 +226,6 @@ const updateWindowsProduct = async (req, res, next) => {
 
   
       const existingWindow = await Windows.findById(id);
-      console.log(existingWindow);
       if (!existingWindow) {
         return res.status(404).json({
           status: 404,

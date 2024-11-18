@@ -7,7 +7,7 @@ router.post('/addcategory', addCategory);
 router.post('/addsubcategory', addSubCategory);
 router.post('/addsubsubcategory', addSubSubcategory);
 router.get('/getcategory/:name', getCategoryByName);
-router.get('/product', getAllProductCategories);
+router.get('/getall', getAllProductCategories);
 router.get('/', getAllCategories);
 router.get('/get-subcategory/:id', getAllSubCategories)
 router.get('/get-subsubcategory/category/:categoryID/subcategory/:subcategoryID', getAllSubSubCategories)
