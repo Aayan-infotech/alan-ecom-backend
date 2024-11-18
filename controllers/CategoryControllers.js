@@ -83,6 +83,7 @@ const addSubCategory = async (req, res) => {
 
       if (category) {
         category.subcategories.push({
+          categoryName: categoryName,
           subcategoryName,
           image: imageUrl
         });
@@ -90,6 +91,7 @@ const addSubCategory = async (req, res) => {
         category = new Category({
           categoryName,
           subcategories: [{
+            categoryName: categoryName,
             subcategoryName,
             image: imageUrl
           }],
@@ -138,6 +140,8 @@ const addSubSubcategory = async (req, res) => {
       const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
 
       subcategory.subSubcategories.push({
+        categoryName,
+        subcategoryName,
         subSubcategoryName,
         image: imageUrl
       });
@@ -202,6 +206,7 @@ const getAllSubCategories = async (req, res) => {
 
     const subcategories = category.subcategories.map(subcategory => ({
       _id: subcategory._id,
+      categoryName: subcategory.categoryName,
       subcategoryName: subcategory.subcategoryName,
       image: subcategory.image
     }));

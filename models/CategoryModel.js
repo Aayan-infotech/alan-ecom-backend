@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const SubSubcategorySchema = new Schema({
+  categoryName: {
+    type: String,
+    required: false 
+  },
+  subcategoryName: {
+    type: String,
+    required: false 
+  },
   subSubcategoryName: {
     type: String,
     required: false 
