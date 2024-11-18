@@ -1,7 +1,18 @@
 const mongoose = require("mongoose");
 
+const dimensionTypeSchema = new mongoose.Schema({
+  name: String,
+  cost: Number
+}, { _id: false });  
+
+const dimensionSchema = new mongoose.Schema({
+  label: String,
+  data: [dimensionTypeSchema]
+});
+
+
 const windowsModel = new mongoose.Schema({
-  productDetails:{
+  productDetails: {
     categoryName: {
       type: String,
       required: false,
@@ -35,115 +46,23 @@ const windowsModel = new mongoose.Schema({
       default: Date.now,
     },
   },
-  dimensions:{
-    width: {
-      type: [
-        {
-          width: String,
-          price: Number
-        }
-      ],
-      required: false,
-    },
-    height: {
-      type: [
-        {
-          height: String,
-          price: Number
-        }
-      ],
-      required: false,
-    },
-    fraction: {
-      type: [
-        {
-          fraction: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    gridOptions: {
-      type: [
-        {
-          gridOptions: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    finType: {
-      type: [
-        {
-          finType: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    glassType: {
-      type: [
-        {
-          glassType: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    lockType: {
-      type: [
-        {
-          lockType: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    color: {
-      type: [
-        {
-          color: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    temperingOptions: {
-      type: [
-        {
-          temperingOptions: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    sideWindowOpens: {
-      type: [
-        {
-          sideWindowOpens: String,
-          price: { type: Number, required: false },
-        },
-      ],
-      required: false,
-    },
-    installationOption: {
-      type: [
-        {
-          installationOption: String,
-          price: Number
-        },
-      ],
-      required: false,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+  dimensions: {
+    Width_Inches_Fraction: dimensionSchema,
+    Height_Inches_Fraction: dimensionSchema,
+    fraction: dimensionSchema,
+    color: dimensionSchema,
+    Select_Grid_Options: dimensionSchema,
+    Fin_Type: dimensionSchema,
+    Glass_Type: dimensionSchema,
+    Lock_Option: dimensionSchema,
+    Tempering_Option: dimensionSchema,
+    Side_Window_Opens: dimensionSchema,
+    Installation_Option: dimensionSchema,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   }
-  });
+});
 
 module.exports = mongoose.model("windows", windowsModel);
