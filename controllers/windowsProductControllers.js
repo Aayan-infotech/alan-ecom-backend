@@ -1,4 +1,5 @@
 const Windows = require('../models/windowsModel');
+const mongoose = require('mongoose')
 const multer = require('multer');
 const path = require('path');
 
@@ -79,57 +80,79 @@ const createWindows = async (req, res, next) => {
 const addDimensions = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      width,
-      height,
-      fraction,
-      gridOptions,
-      finType,
-      glassType,
-      lockType,
-      color,
-      temperingOptions,
-      sideWindowOpens,
-      installationOption,
-      instructionQuestion
-    } = req.body;
+    const dimensions = req.body;
 
-    const updatedDimensions = {
-      width,
-      height,
-      fraction,
-      gridOptions,
-      finType,
-      glassType,
-      lockType,
-      color,
-      temperingOptions,
-      sideWindowOpens,
-      installationOption,
-      instructionQuestion
-    };
-
-    const existingWindow = await Windows.findByIdAndUpdate(
-      id,
-      { $set: { dimensions: updatedDimensions } },
-      { new: true }
-    );
-
-    if (!existingWindow) {
-      return res.status(404).json({ error: "Window not found" });
+    if (!dimensions || Object.keys(dimensions).length === 0) {
+      return res.status(400).json({
+        status: 404,
+        success: false,
+        message: "No dimensions data provided",
+      });
     }
 
-    res.status(200).json(
-      {
-        status: 200,
-        success: true,
-        message: "Dimensions added successfully",
-        data: existingWindow,
+    const formattedDimensions = {};
+
+    Object.keys(dimensions).forEach((key) => {
+      const dimension = dimensions[key];
+
+      if (dimension.data && Array.isArray(dimension.data) && dimension.data[0].name.length > 0) {
+        formattedDimensions[key] = {
+          label: dimension.label, 
+          data: dimension.data.map((item) => ({
+            name: item.name,
+            cost: item.cost,
+          })),
+        };
+      } else {
+        formattedDimensions[key] = {
+          label: null,
+          data: [],
+        };
+      }
+    });
+
+    if (Object.keys(formattedDimensions).length === 0) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Invalid dimensions data (missing or empty data)",
       });
+    }
+
+    const updatedWindow = await Windows.findByIdAndUpdate(
+      id,
+      { $set: { dimensions: formattedDimensions } },
+      { new: true, runValidators: true } 
+    );
+
+    if (!updatedWindow) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Window not found",
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Dimensions updated successfully",
+      data: updatedWindow,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to add dimensions" });
+    console.error("Error updating dimensions:", error);
+    res.status(500).json({
+      status: 500,
+      success: false,
+      message: "Failed to update dimensions",
+      error: error.message,
+    });
   }
 };
+
+
+
+
 
 const getAllWindows = async (req, res) => {
   try {
@@ -224,7 +247,7 @@ const updateWindowsProduct = async (req, res, next) => {
         subSubCategory,
       } = req.body;
 
-  
+
       const existingWindow = await Windows.findById(id);
       if (!existingWindow) {
         return res.status(404).json({
@@ -234,13 +257,13 @@ const updateWindowsProduct = async (req, res, next) => {
         });
       }
 
-    
+
       let images = existingWindow.productDetails.images || [];
       if (req.files && req.files.length > 0) {
         images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
       }
 
-  
+
       const updatedDetails = {
         categoryName: categoryName || existingWindow.productDetails.categoryName,
         productName: productName || existingWindow.productDetails.productName,
@@ -251,14 +274,14 @@ const updateWindowsProduct = async (req, res, next) => {
         images,
       };
 
-    
+
       const updatedWindow = await Windows.findByIdAndUpdate(
         id,
         { productDetails: updatedDetails },
         { new: true }
       );
 
-  
+
       res.status(200).json({
         status: 200,
         success: true,
