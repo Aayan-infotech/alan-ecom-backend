@@ -87,7 +87,7 @@ const addDimensions = async (req, res) => {
         status: 404,
         success: false,
         message: "No dimensions data provided",
-        data: []
+        data: null
       });
     }
 
@@ -131,7 +131,7 @@ const addDimensions = async (req, res) => {
         status: 404,
         success: false,
         message: "Window not found",
-        data: []
+        data: null
       });
     }
 
@@ -165,7 +165,7 @@ const getAllWindows = async (req, res) => {
         status: 404,
         success: true,
         message: "Windows data fetched successfully",
-        data: []
+        data: null
       });
     }
 
@@ -196,7 +196,7 @@ const getWindowByID = async (req, res) => {
         status: 404,
         success: false,
         message: "Product not found",
-        data: []
+        data: null
       });
     }
 
@@ -259,7 +259,7 @@ const updateWindowsProduct = async (req, res, next) => {
           status: 404,
           success: false,
           message: "Product not found",
-          data: []
+          data: null
         });
       }
 
