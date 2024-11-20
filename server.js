@@ -43,6 +43,7 @@ const AppointmentRoutes = require("./routes/appointmentRoute");
 const WindowsRoute = require("./routes/windowsRoute");
 const EstimateRoute = require("./routes/estimateRoute");
 const PersonalDetailsRoute = require("./routes/personalDetailsRoute");
+const HardwareRoute = require("./routes/hardwareRoute");
 
 // app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -53,6 +54,7 @@ app.use("/api/appointments", AppointmentRoutes);
 app.use("/api/windows", WindowsRoute);
 app.use("/api/estimate", EstimateRoute);
 app.use("/api/personalDetails", PersonalDetailsRoute);
+app.use("/api/hardware",HardwareRoute );
 
 // Start Server
 app.listen(PORT, () => {

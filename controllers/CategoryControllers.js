@@ -1,4 +1,5 @@
 const Category = require('../models/CategoryModel');
+const Hardware = require('../models/hardwareModel');
 const Windows = require('../models/windowsModel');
 const multer = require('multer');
 const path = require('path');
@@ -213,7 +214,17 @@ const getAllSubCategories = async (req, res) => {
 
     if (subcategories.length === 0) {
 
-      const products = await Windows.find();
+      let products = null
+      switch (category.categoryName) {
+        case 'windows':
+          products = await Windows.find().select('productDetails');
+          break;
+
+        case 'hardware':
+          products = await Hardware.find().select('productDetails');
+          break;
+
+      }
 
       if (products.length === 0) {
         return res.status(404).json({
@@ -262,15 +273,31 @@ const getAllSubSubCategories = async (req, res) => {
       });
     }
     const subSubcategories = category.subcategories[0].subSubcategories;
+    const subcategory = category.subcategories[0];
 
     if (subSubcategories.length === 0) {
-      return res.status(404).json({
-        status: 404,
-        success: false,
-        message: 'Sub-Sub-Category not found'
+      let products = [];
+
+      if(subcategory.categoryName === 'hardware'){
+        products = await Hardware.find().select('productDetails');
+      }
+
+      if (products.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          success: false,
+          message: `No Sub-Subcategories or products found for this category `,
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        status: 200,
+        success: true,
+        message: `Sub-Sub-Category not found but Product found for ${subcategory.categoryName}`,
+        data: products
       });
     }
-
 
     res.status(200).json({
       status: 200,

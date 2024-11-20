@@ -58,6 +58,10 @@ const windowsModel = new mongoose.Schema({
     Tempering_Option: dimensionSchema,
     Side_Window_Opens: dimensionSchema,
     Installation_Option: dimensionSchema,
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   createdAt: {
     type: Date,

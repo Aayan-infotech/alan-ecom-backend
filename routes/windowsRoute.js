@@ -1,5 +1,4 @@
 const express = require('express');
-const upload = require('../middleware/upload');
 const { createWindows, getAllWindows, deleteWindows, updateWindowsProduct, addDimensions, getDimensions, getWindowByID } = require('../controllers/windowsProductControllers');
 
 const router = express.Router();
