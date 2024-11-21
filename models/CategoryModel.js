@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const SubSubcategorySchema = new Schema({
   categoryName: {
     type: String,
-    required: false 
+    required: true 
   },
   subcategoryName: {
     type: String,
@@ -33,6 +33,10 @@ const SubcategorySchema = new Schema({
     type: String,
     required: false 
   },
+  isSubSubCategory: {
+    type: String,
+    default: false,
+  },
   image: {
     type: String,
     required: false
@@ -48,6 +52,10 @@ const CategorySchema = new Schema({
   categoryName: {
     type: String,
     required: true
+  },
+  isSubCategory: {
+    type: String,
+    default: false,
   },
   image: {
     type: String,
