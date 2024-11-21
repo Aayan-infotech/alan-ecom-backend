@@ -170,7 +170,7 @@ const addSubSubcategory = async (req, res) => {
 
 const getAllProductCategories = async (req, res) => {
   try {
-    const categories = await Category.find().select('categoryName image');
+    const categories = await Category.find().select('categoryName image isSubCategory');
     res.status(200).json({
       status: 200,
       success: true,
@@ -213,7 +213,8 @@ const getAllSubCategories = async (req, res) => {
       _id: subcategory._id,
       categoryName: subcategory.categoryName,
       subcategoryName: subcategory.subcategoryName,
-      image: subcategory.image
+      image: subcategory.image,
+      isSubSubCategory: subcategory.isSubSubCategory
     }));
 
     if (subcategories.length === 0) {
