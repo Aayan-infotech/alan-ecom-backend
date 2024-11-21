@@ -82,6 +82,8 @@ const addSubCategory = async (req, res) => {
 
       let category = await Category.findOne({ categoryName });
 
+      category.isSubCategory = 'true';
+
       if (category) {
         category.subcategories.push({
           categoryName: categoryName,
@@ -139,6 +141,8 @@ const addSubSubcategory = async (req, res) => {
       }
 
       const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+
+      subcategory.isSubSubCategory = 'true';
 
       subcategory.subSubcategories.push({
         categoryName,
@@ -219,11 +223,6 @@ const getAllSubCategories = async (req, res) => {
         case 'windows':
           products = await Windows.find().select('productDetails');
           break;
-
-        case 'hardware':
-          products = await Hardware.find().select('productDetails');
-          break;
-
       }
 
       if (products.length === 0) {
@@ -265,6 +264,9 @@ const getAllSubSubCategories = async (req, res) => {
         'subcategories.$': 1
       }
     );
+
+    console.log("category:", category);
+
     if (!category || !category.subcategories || category.subcategories.length === 0) {
       return res.status(404).json({
         status: 404,
@@ -279,7 +281,7 @@ const getAllSubSubCategories = async (req, res) => {
       let products = [];
 
       if(subcategory.categoryName === 'hardware'){
-        products = await Hardware.find().select('productDetails');
+        products = await Hardware.find({'productDetails.subCategory': subcategory.subcategoryName}).select('productDetails');
       }
 
       if (products.length === 0) {
@@ -335,6 +337,8 @@ const deleteSubCategory = async (req, res) => {
 
     category.subcategories = category.subcategories.filter(subcategory => subcategory._id.toString() !== id);
 
+    category.isSubCategory = category.subcategories.length > 0;
+
     await category.save();
 
     res.status(200).json({
@@ -387,6 +391,8 @@ const deleteSubSubCategory = async (req, res) => {
     }
 
     subcategory.subSubcategories.splice(subSubcategoryIndex, 1);
+
+    subcategory.isSubSubCategory = subcategory.subSubcategories.length > 0;
 
     await category.save();
 
