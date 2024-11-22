@@ -201,7 +201,7 @@ const addDimensions = async (req, res) => {
         const { id } = req.params;
         const dimensions = req.body;
 
-        if (!dimensions || Object.keys(dimensions).length === 0) {
+        if (!dimensions || !dimensions.dimensions || Object.keys(dimensions.dimensions).length === 0) {
             return res.status(400).json({
                 status: 404,
                 success: false,
@@ -210,12 +210,13 @@ const addDimensions = async (req, res) => {
             });
         }
 
+        const dimensionsData = dimensions.dimensions; // Extract nested dimensions
         const formattedDimensions = {};
 
-        Object.keys(dimensions).forEach((key) => {
-            const dimension = dimensions[key];
+        Object.keys(dimensionsData).forEach((key) => {
+            const dimension = dimensionsData[key];
 
-            if (dimension.data && Array.isArray(dimension.data) && dimension.data[0].name.length > 0) {
+            if (dimension.data && Array.isArray(dimension.data) && dimension.data.length > 0 && dimension.data[0].name.length > 0) {
                 formattedDimensions[key] = {
                     label: dimension.label,
                     data: dimension.data.map((item) => ({
@@ -242,7 +243,7 @@ const addDimensions = async (req, res) => {
         const updatedHardware = await Hardware.findByIdAndUpdate(
             id,
             { $set: { dimensions: formattedDimensions } },
-            { new: true, runValidators: true }
+            { new: true }
         );
 
         if (!updatedHardware) {
@@ -262,14 +263,16 @@ const addDimensions = async (req, res) => {
         });
 
     } catch (error) {
-        console.log("error:", error.message);
+        console.log("Error:", error.message);
         res.status(500).json({
             status: 500,
             success: false,
-            message: error.message
-        })
+            message: error.message,
+        });
     }
-}
+};
+
+
 
 module.exports = {
     createHardware,
