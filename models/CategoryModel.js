@@ -34,7 +34,7 @@ const SubcategorySchema = new Schema({
     required: false 
   },
   isSubSubCategory: {
-    type: String,
+    type: Boolean,
     default: false,
   },
   image: {
@@ -54,7 +54,7 @@ const CategorySchema = new Schema({
     required: true
   },
   isSubCategory: {
-    type: String,
+    type: Boolean,
     default: false,
   },
   image: {
