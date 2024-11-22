@@ -82,7 +82,7 @@ const addSubCategory = async (req, res) => {
 
       let category = await Category.findOne({ categoryName });
 
-      category.isSubCategory = 'true';
+      category.isSubCategory = true;
 
       if (category) {
         category.subcategories.push({
@@ -142,7 +142,7 @@ const addSubSubcategory = async (req, res) => {
 
       const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
 
-      subcategory.isSubSubCategory = 'true';
+      subcategory.isSubSubCategory = true;
 
       subcategory.subSubcategories.push({
         categoryName,
@@ -182,9 +182,10 @@ const getAllProductCategories = async (req, res) => {
   }
 };
 
+//for admin panel
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find()
+    const categories = await Category.find().limit(5);
     res.status(200).json({
       status: 200,
       success: true,
