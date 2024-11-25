@@ -72,7 +72,7 @@ const createEntryDoor = async (req, res) => {
 
 const getAllEntryDoors = async (req, res) => {
     try {
-        const allProduct = await EntryDoor.find({ 'productDetails.categoryName': "Entry Doors" });
+        const allProduct = await EntryDoor.find({ 'productDetails.categoryName': "Entry Doors" }).select('productDetails');
 
         if (!allProduct) {
             res.status(404).json({
