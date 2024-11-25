@@ -165,7 +165,7 @@ const updateHardwareProduct = async (req, res) => {
             const updatedDetails = {
                 categoryName: categoryName || existingHardwareProduct.productDetails.categoryName,
                 subCategory: subCategory || existingHardwareProduct.productDetails.subCategory,
-                subSubCatgeory: subSubCategory || existingHardwareProduct.productDetails.subSubCategory,
+                subSubCategory: subSubCategory || existingHardwareProduct.productDetails.subSubCategory,
                 description: description || existingHardwareProduct.productDetails.description,
                 productName: productName || existingHardwareProduct.productDetails.productName,
                 price: price || existingHardwareProduct.productDetails.price,
