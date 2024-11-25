@@ -16,6 +16,7 @@ const windowsModel = new mongoose.Schema({
     categoryName: {
       type: String,
       required: false,
+      default: "Windows"
     },
     productName: {
       type: String,

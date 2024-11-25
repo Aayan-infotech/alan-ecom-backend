@@ -1,13 +1,13 @@
-const Hardware = require('../models/hardwareModel');
-const multer = require('multer');
-const path = require('path');
+const EntryDoor = require('../models/doorsModel');
+const multer = require('multer')
+const path = require('path')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the file name
     }
 });
 
@@ -28,7 +28,7 @@ const upload = multer({
     }
 }).array('images', 10);
 
-const createHardware = async (req, res) => {
+const createEntryDoor = async (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(400).json({
@@ -36,104 +36,131 @@ const createHardware = async (req, res) => {
                 message: err.message
             });
         }
-
         try {
-            const { categoryName, subCategory, subSubCategory, productName, price, description } = req.body;
-
+            const { categoryName, productName, price, description, subCategory, subSubCategory, } = req.body;
             const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
-            const newHardware = new Hardware({
+            const newEntryDoor = new EntryDoor({
                 productDetails: {
                     categoryName,
-                    subCategory,
-                    subSubCategory,
                     productName,
                     price,
                     description,
+                    subCategory,
+                    subSubCategory,
                     images
                 }
             });
 
-            const savedHardware = await newHardware.save();
+            const savedEntryDoor = await newEntryDoor.save();
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: "Hardware created successfully",
-                data: savedHardware
-            });
+                message: "Entry Door Created Successfully",
+                data: savedEntryDoor
+            })
         } catch (error) {
             res.status(500).json({
-                error: error.message
-            });
+                status: 500,
+                success: false,
+                message: error.message
+            })
         }
-    });
-};
+    })
+}
 
-const getHardwareProduct = async (req, res) => {
+const getAllEntryDoors = async (req, res) => {
     try {
-        const hardware = await Hardware.find().select("productDetails");
+        const allProduct = await EntryDoor.find({ 'productDetails.categoryName': "Entry Doors" });
+
+        if (!allProduct) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: "No data found for Entry Doors",
+                data: null
+            })
+        }
+
         res.status(200).json({
             status: 200,
             success: true,
-            message: "Hardware Product fetched succesfully",
-            data: hardware
+            message: "All Entry Doors",
+            data: allProduct
         })
 
     } catch (error) {
         res.status(500).json({
             status: 500,
             success: false,
-            message: " Internal server error",
-            error: error.message
+            message: error.message
         })
     }
 }
 
-const getHardwarePoductById = async (req, res) => {
+const getEntryDoorsById = async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await Hardware.findById(id);
+        const product = await EntryDoor.findById(id);
+
+        if (!product) {
+            res.status(404).json({
+                status: 404,
+                success: true,
+                message: "No data found for Entry Doors",
+                data: null
+            })
+        }
 
         res.status(200).json({
             status: 200,
-            success: false,
-            message: "Hardware Product fetched successfully",
+            success: true,
+            message: "Entry Door Product found succesfully",
             data: product
         })
+
     } catch (error) {
         res.status(500).json({
             status: 500,
             success: false,
-            message: "internal server error",
-            error: error.message
+            message: error.message
         })
     }
 }
 
-const deleteHardwareProduct = async (req, res) => {
+const deleteEntryDoors = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedProduct = await Hardware.findByIdAndDelete(id);
+        const deletedProduct = await EntryDoor.findByIdAndDelete(id);
+
+        if (!deletedProduct) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: "No Entry Doors Product found",
+                data: null
+            })
+        }
 
         res.status(200).json({
             status: 200,
-            success: false,
-            message: "Hardware Product deleted successfully",
+            success: true,
+            message: "Entry Door Product deleted succesfully",
             data: deletedProduct
         })
 
+
     } catch (error) {
         res.status(500).json({
             status: 500,
             success: false,
-            message: "internal server error",
-            error: error.message
+            message: error.message
         })
     }
 }
 
-const updateHardwareProduct = async (req, res) => {
+const updateEntryDoors = async (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(400).json({
@@ -146,9 +173,9 @@ const updateHardwareProduct = async (req, res) => {
 
             const { categoryName, subCategory, subSubCategory, productName, price, description } = req.body;
 
-            const existingHardwareProduct = await Hardware.findById(id);
+            const existingEntryDoor = await EntryDoor.findById(id);
 
-            if (!existingHardwareProduct) {
+            if (!existingEntryDoor) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -157,22 +184,22 @@ const updateHardwareProduct = async (req, res) => {
                 })
             }
 
-            let images = existingHardwareProduct.productDetails.images || [];
+            let images = existingEntryDoor.productDetails.images || [];
             if (req.files && req.files.length > 0) {
                 images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
             }
 
             const updatedDetails = {
-                categoryName: categoryName || existingHardwareProduct.productDetails.categoryName,
-                subCategory: subCategory || existingHardwareProduct.productDetails.subCategory,
-                subSubCatgeory: subSubCategory || existingHardwareProduct.productDetails.subSubCategory,
-                description: description || existingHardwareProduct.productDetails.description,
-                productName: productName || existingHardwareProduct.productDetails.productName,
-                price: price || existingHardwareProduct.productDetails.price,
+                categoryName: categoryName || existingEntryDoor.productDetails.categoryName,
+                subCategory: subCategory || existingEntryDoor.productDetails.subCategory,
+                subSubCatgeory: subSubCategory || existingEntryDoor.productDetails.subSubCategory,
+                description: description || existingEntryDoor.productDetails.description,
+                productName: productName || existingEntryDoor.productDetails.productName,
+                price: price || existingEntryDoor.productDetails.price,
                 images,
             }
 
-            const updatedHardwareProduct = await Hardware.findByIdAndUpdate(
+            const updatedEntryDoor = await EntryDoor.findByIdAndUpdate(
                 id,
                 { productDetails: updatedDetails },
                 { new: true }
@@ -181,8 +208,8 @@ const updateHardwareProduct = async (req, res) => {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: "Hardware Product updated successfully",
-                data: updatedHardwareProduct,
+                message: "EntryDoorProduct updated successfully",
+                data: updatedEntryDoor,
             });
 
         } catch (error) {
@@ -240,17 +267,17 @@ const addDimensions = async (req, res) => {
             });
         }
 
-        const updatedHardware = await Hardware.findByIdAndUpdate(
+        const updatedEntryDoor= await EntryDoor.findByIdAndUpdate(
             id,
             { $set: { dimensions: formattedDimensions } },
             { new: true }
         );
 
-        if (!updatedHardware) {
+        if (!updatedEntryDoor) {
             return res.status(404).json({
                 status: 404,
                 success: false,
-                message: "Hardware not found",
+                message: "Entry Door not found",
                 data: null
             });
         }
@@ -259,7 +286,7 @@ const addDimensions = async (req, res) => {
             status: 200,
             success: true,
             message: "Dimensions updated successfully",
-            data: updatedHardware,
+            data: updatedEntryDoor,
         });
 
     } catch (error) {
@@ -272,13 +299,11 @@ const addDimensions = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
-    createHardware,
-    getHardwareProduct,
-    getHardwarePoductById,
-    deleteHardwareProduct,
-    updateHardwareProduct,
-    addDimensions
+    createEntryDoor,
+    getAllEntryDoors,
+    getEntryDoorsById,
+    deleteEntryDoors,
+    updateEntryDoors,
+    addDimensions,
 }

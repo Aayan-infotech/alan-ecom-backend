@@ -44,6 +44,7 @@ const WindowsRoute = require("./routes/windowsRoute");
 const EstimateRoute = require("./routes/estimateRoute");
 const PersonalDetailsRoute = require("./routes/personalDetailsRoute");
 const HardwareRoute = require("./routes/hardwareRoute");
+const EntryDoorRoute = require("./routes/EntryDoorRoute");
 
 // app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -55,6 +56,7 @@ app.use("/api/windows", WindowsRoute);
 app.use("/api/estimate", EstimateRoute);
 app.use("/api/personalDetails", PersonalDetailsRoute);
 app.use("/api/hardware",HardwareRoute );
+app.use("/api/entryDoor",EntryDoorRoute);
 
 // Start Server
 app.listen(PORT, () => {

@@ -14,7 +14,8 @@ const hardwareModel = new mongoose.Schema({
     productDetails: {
         categoryName: {
             type: String,
-            required: true
+            required: true,
+            default: "Hardware"
         },
         subCategory: {
             type: String,

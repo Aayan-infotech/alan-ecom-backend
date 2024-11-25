@@ -1,81 +1,79 @@
 const mongoose = require("mongoose");
 
+const dimensionTypeSchema = new mongoose.Schema({
+  name: String,
+  cost: Number
+}, { _id: false });  
+
+const dimensionSchema = new mongoose.Schema({
+  label: String,
+  data: [dimensionTypeSchema]
+});
+
 const doorsModel = new mongoose.Schema({
-  categoryName: {
-    type: String,
-    default: "Doors",
+  productDetails: {
+    categoryName: {
+      type: String,
+      required: true
+    },
+    productName: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    subCategory: {
+      type: String,
+      required: false,
+    },
+    subSubCategory: {
+      type: String,
+      required: false,
+    },
+    images: {
+      type: Array,
+      required: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    }
   },
-  productName: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  subCategory: {
-    type: String,
-    required: false,
-  },
-  subSubCategory: {
-    type: String,
-    required: false,
-  },
-  frameWidthAndHeight: {
-    type: [String],
-    required: false,
-  },
-  addPrefinish: {
-    type: [String],
-    required: false,
-  },
-  doorSwingDirection: {
-    type: [String],
-    required: false,
-  },
-  jampSize: {
-    type: [String],
-    required: false,
-  },
-  sill: {
-    type: [String],
-    required: false,
-  },
-  doorShoe: {
-    type: [String],
-    required: false,
-  },
-  weatherstrip: {
-    type: [String],
-    required: false,
-  },
-  boreOptions: {
-    type: [String],
-    required: false,
-  },
-  hinges: {
-    type: [String],
-    required: false,
-  },
-  preHungOptions: {
-    type: [String],
-    required: false,
-  },
-  caulkingOption: {
-    type: [String],
-    required: false,
-  },
-  installationOption: {
-    type: [String],
-    required: false,
-  },
-  images: {
-    type: Array,
-    required: false,
+  dimensions: {
+    frameWidthAndHeight: dimensionSchema,
+    gridOption: dimensionSchema,
+    frameExtrusion: dimensionSchema,
+    color: dimensionSchema,
+    installationOption: dimensionSchema,
+    doorSwingDirection: dimensionSchema,
+    Quantity: dimensionSchema,
+    lockOption: dimensionSchema,
+    glassOption: dimensionSchema,
+    addPrefinish: dimensionSchema,
+    boreOptions: dimensionSchema,
+    jambSize: dimensionSchema,
+    sill: dimensionSchema,
+    doorShoe: dimensionSchema,
+    weatherStrip: dimensionSchema,
+    hinges: dimensionSchema,
+    preHungOptions: dimensionSchema,
+    selectPrefinishing: dimensionSchema,
+    hingeColor: dimensionSchema,
+    weatherStripColor: dimensionSchema,
+    peepView: dimensionSchema,
+    speakEasyOption: dimensionSchema,
+    selectGlassforDoor: dimensionSchema,
+    selecttheFrameSize: dimensionSchema,
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    }
   },
   createdAt: {
     type: Date,
