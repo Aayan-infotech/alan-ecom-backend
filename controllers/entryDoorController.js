@@ -192,7 +192,7 @@ const updateEntryDoors = async (req, res) => {
             const updatedDetails = {
                 categoryName: categoryName || existingEntryDoor.productDetails.categoryName,
                 subCategory: subCategory || existingEntryDoor.productDetails.subCategory,
-                subSubCatgeory: subSubCategory || existingEntryDoor.productDetails.subSubCategory,
+                subSubCategory: subSubCategory || existingEntryDoor.productDetails.subSubCategory,
                 description: description || existingEntryDoor.productDetails.description,
                 productName: productName || existingEntryDoor.productDetails.productName,
                 price: price || existingEntryDoor.productDetails.price,
