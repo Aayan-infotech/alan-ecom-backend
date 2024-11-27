@@ -12,6 +12,10 @@ const dimensionSchema = new mongoose.Schema({
 
 const doorsModel = new mongoose.Schema({
   productDetails: {
+    categoryId: {
+      type: String,
+      required: true
+    },
     categoryName: {
       type: String,
       required: true
@@ -70,6 +74,7 @@ const doorsModel = new mongoose.Schema({
     speakEasyOption: dimensionSchema,
     selectGlassforDoor: dimensionSchema,
     selecttheFrameSize: dimensionSchema,
+    
     createdAt: {
       type: Date,
       default: Date.now,

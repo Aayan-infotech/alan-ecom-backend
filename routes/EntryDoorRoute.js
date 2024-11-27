@@ -1,5 +1,5 @@
 const express = require('express');
-const { createEntryDoor, getAllEntryDoors, getEntryDoorsById, deleteEntryDoors, updateEntryDoors, addDimensions } = require('../controllers/entryDoorController');
+const { createEntryDoor, getAllEntryDoors, getEntryDoorsById, deleteEntryDoors, updateEntryDoors, addDimensions, getProduct } = require('../controllers/entryDoorController');
 
 const router = express.Router();
 
@@ -9,5 +9,6 @@ router.get("/getProductById/:id",getEntryDoorsById);
 router.delete("/delete/:id",deleteEntryDoors);
 router.put("/update/:id",updateEntryDoors);
 router.put("/add-dimensions/:id",addDimensions);
+router.get("/getProduct/:id",getProduct);
 
 module.exports = router;
