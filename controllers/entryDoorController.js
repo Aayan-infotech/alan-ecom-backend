@@ -95,8 +95,8 @@ const getAllEntryDoors = async (req, res) => {
     try {
         const allProduct = await EntryDoor.find({ 'productDetails.categoryName': "Entry Doors" }).select('productDetails');
 
-        if (!allProduct) {
-            res.status(404).json({
+        if (!allProduct || allProduct.length === 0) {
+            return res.status(404).json({
                 status: 404,
                 success: false,
                 message: "No data found for Entry Doors",
@@ -126,7 +126,7 @@ const getEntryDoorsById = async (req, res) => {
         const product = await EntryDoor.findById(id);
 
         if (!product) {
-            res.status(404).json({
+            return res.status(404).json({
                 status: 404,
                 success: true,
                 message: "No data found for Entry Doors",

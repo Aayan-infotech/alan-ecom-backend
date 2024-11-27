@@ -94,6 +94,16 @@ const createHardware = async (req, res) => {
 const getHardwareProduct = async (req, res) => {
     try {
         const hardware = await Hardware.find().select("productDetails");
+
+        if (!hardware) {
+            return res.status(404).json({
+                status: 404,
+                success: true,
+                message: "Hardware Product Not Found",
+                data: null
+            })
+        }
+
         res.status(200).json({
             status: 200,
             success: true,
@@ -116,9 +126,17 @@ const getHardwarePoductById = async (req, res) => {
         const { id } = req.params;
         const product = await Hardware.findById(id);
 
+        if (!product) {
+            return res.status(404).json({
+                status: 404,
+                success: false,
+                message: "Hardware Product Not Found",
+                data: null
+            })
+        }
         res.status(200).json({
             status: 200,
-            success: false,
+            success: true,
             message: "Hardware Product fetched successfully",
             data: product
         })
@@ -170,7 +188,7 @@ const updateHardwareProduct = async (req, res) => {
             const existingHardwareProduct = await Hardware.findById(id);
 
             if (!existingHardwareProduct) {
-                res.status(404).json({
+                return res.status(404).json({
                     status: 404,
                     success: false,
                     message: "Product not found",
