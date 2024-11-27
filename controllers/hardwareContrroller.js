@@ -1,4 +1,5 @@
 const Hardware = require('../models/hardwareModel');
+const Category = require('../models/CategoryModel')
 const multer = require('multer');
 const path = require('path');
 
@@ -38,12 +39,32 @@ const createHardware = async (req, res) => {
         }
 
         try {
-            const { categoryName, subCategory, subSubCategory, productName, price, description } = req.body;
+            const { categoryName, subCategoryId, subCategory, subSubCategoryId, subSubCategory, productName, price, description } = req.body;
 
             const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
 
+            let categoryId;
+            if (subSubCategoryId) {
+                categoryId = subSubCategoryId;
+            }
+            else if (subCategoryId) {
+                categoryId = subCategoryId;
+            }
+            else {
+                const categoryData = await Category.findOne({ categoryName });
+                if (categoryData) {
+                    categoryId = categoryData._id;
+                } else {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Unable to find category for the provided inputs"
+                    });
+                }
+            }
+
             const newHardware = new Hardware({
                 productDetails: {
+                    categoryId,
                     categoryName,
                     subCategory,
                     subSubCategory,
@@ -210,7 +231,7 @@ const addDimensions = async (req, res) => {
             });
         }
 
-        const dimensionsData = dimensions.dimensions; 
+        const dimensionsData = dimensions.dimensions;
         const formattedDimensions = {};
 
         Object.keys(dimensionsData).forEach((key) => {
@@ -272,7 +293,35 @@ const addDimensions = async (req, res) => {
     }
 };
 
+const getProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await Hardware.find({ 'productDetails.categoryId': id }).select('productDetails');
 
+        if (!category || category.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                success: false,
+                message: "Product not found",
+                data: null
+            })
+        }
+
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: "Product fetched successfully",
+            data: category
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     createHardware,
@@ -280,5 +329,6 @@ module.exports = {
     getHardwarePoductById,
     deleteHardwareProduct,
     updateHardwareProduct,
-    addDimensions
+    addDimensions,
+    getProduct
 }

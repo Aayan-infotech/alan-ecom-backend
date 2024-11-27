@@ -37,11 +37,31 @@ const createBiFoldDoor = async (req, res) => {
         }
 
         try {
-            const { categoryName, productName, price, description, subCategory, subSubCategory } = req.body;
+            const { categoryName, subCategoryId, subCategory, subSubCategoryId, subSubCategory, productName, price, description } = req.body;
             const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
+
+            let categoryId;
+            if (subSubCategoryId) {
+                categoryId = subSubCategoryId;
+            }
+            else if (subCategoryId) {
+                categoryId = subCategoryId;
+            }
+            else {
+                const categoryData = await Category.findOne({ categoryName });
+                if (categoryData) {
+                    categoryId = categoryData._id;
+                } else {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Unable to find category for the provided inputs"
+                    });
+                }
+            }
 
             const newBiFoldDoor = new BiFoldDoor({
                 productDetails: {
+                    categoryId,
                     categoryName,
                     productName,
                     price,
@@ -236,7 +256,7 @@ const addDimensions = async (req, res) => {
             });
         }
 
-        const dimensionsData = dimensions.dimensions; 
+        const dimensionsData = dimensions.dimensions;
         const formattedDimensions = {};
 
         Object.keys(dimensionsData).forEach((key) => {
@@ -266,7 +286,7 @@ const addDimensions = async (req, res) => {
             });
         }
 
-        const updatedDoor= await BiFoldDoor.findByIdAndUpdate(
+        const updatedDoor = await BiFoldDoor.findByIdAndUpdate(
             id,
             { $set: { dimensions: formattedDimensions } },
             { new: true }
@@ -298,11 +318,41 @@ const addDimensions = async (req, res) => {
     }
 };
 
+const getProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await BiFoldDoor.find({ 'productDetails.categoryId': id }).select('productDetails');
+
+        if (!category || category.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                success: false,
+                message: "Product not found",
+                data: null
+            })
+        }
+        return res.status(200).json({
+            status: 200,
+            success: true,
+            message: "Product fetched successfully",
+            data: category
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     createBiFoldDoor,
     getAllBiFoldDoors,
     getProductById,
     deleteBiFoldDoors,
     updateBiFoldDoors,
-    addDimensions
+    addDimensions,
+    getProduct
 }

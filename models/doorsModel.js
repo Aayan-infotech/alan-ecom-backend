@@ -12,6 +12,10 @@ const dimensionSchema = new mongoose.Schema({
 
 const doorsModel = new mongoose.Schema({
   productDetails: {
+    categoryId: {
+      type: String,
+      required: true
+    },
     categoryName: {
       type: String,
       required: true
