@@ -48,7 +48,7 @@ const createDoorss = async (req, res, next) => {
       } = req.body;
 
 
-      const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
+      const images = req.files ? req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`) : [];
 
       const newdoorsModel = new doorsModel({
         productName,
@@ -77,10 +77,12 @@ const addDimensions = async (req, res) => {
   try {
     const { id } = req.params;
     const { frameWidthAndHeight, addPrefinish, doorSwingDirection, jampSize, sill, doorShoe, weatherstrip,
-      boreOptions, hinges, preHungOptions, caulkingOption, installationOption} = req.body;
+      boreOptions, hinges, preHungOptions, caulkingOption, installationOption } = req.body;
 
-    const existingDoors = await doorsModel.findByIdAndUpdate(id, { frameWidthAndHeight, addPrefinish, doorSwingDirection, jampSize, sill, 
-      doorShoe, weatherstrip, boreOptions, hinges, preHungOptions, caulkingOption, installationOption }, { new: true });
+    const existingDoors = await doorsModel.findByIdAndUpdate(id, {
+      frameWidthAndHeight, addPrefinish, doorSwingDirection, jampSize, sill,
+      doorShoe, weatherstrip, boreOptions, hinges, preHungOptions, caulkingOption, installationOption
+    }, { new: true });
 
     res.status(201).json({ message: "dimensions added successfully", dimensions: existingDoors });
   } catch (error) {
@@ -193,10 +195,10 @@ const updateDoorsProduct = async (req, res, next) => {
         });
       }
 
-      
-      let images = existingDoor.images; 
+
+      let images = existingDoor.images;
       if (req.files && req.files.length > 0) {
-        images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+        images = req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`);
       }
 
 
