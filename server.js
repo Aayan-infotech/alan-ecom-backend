@@ -46,6 +46,7 @@ const PersonalDetailsRoute = require("./routes/personalDetailsRoute");
 const HardwareRoute = require("./routes/hardwareRoute");
 const EntryDoorRoute = require("./routes/EntryDoorRoute");
 const BiFoldDoorRoutes = require("./routes/biFoldDoorRoutes");
+const InteriorDoorsRoute = require("./routes/interiorDoorsRoute");
 
 // app.use("/api", spotlightDealsRoutes);
 app.use("/api/cart", cartRoutes);
@@ -58,7 +59,7 @@ app.use("/api/estimate", EstimateRoute);
 app.use("/api/personalDetails", PersonalDetailsRoute);
 app.use("/api/hardware",HardwareRoute );
 app.use("/api/entryDoor",EntryDoorRoute);
-app.use("/api/biFoldDoors",BiFoldDoorRoutes);
+app.use("/api/interiorDoors",InteriorDoorsRoute);
 
 // Start Server
 app.listen(PORT, () => {

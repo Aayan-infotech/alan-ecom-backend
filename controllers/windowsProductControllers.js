@@ -49,7 +49,7 @@ const createWindows = async (req, res, next) => {
       } = req.body;
 
 
-      const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
+      const images = req.files ? req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`) : [];
 
       const newwindowsModel = new Windows({
         productDetails: {
@@ -98,7 +98,7 @@ const addDimensions = async (req, res) => {
 
       if (dimension.data && Array.isArray(dimension.data) && dimension.data[0].name.length > 0) {
         formattedDimensions[key] = {
-          label: dimension.label, 
+          label: dimension.label,
           data: dimension.data.map((item) => ({
             name: item.name,
             cost: item.cost,
@@ -123,7 +123,7 @@ const addDimensions = async (req, res) => {
     const updatedWindow = await Windows.findByIdAndUpdate(
       id,
       { $set: { dimensions: formattedDimensions } },
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true }
     );
 
     if (!updatedWindow) {
@@ -266,7 +266,7 @@ const updateWindowsProduct = async (req, res, next) => {
 
       let images = existingWindow.productDetails.images || [];
       if (req.files && req.files.length > 0) {
-        images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+        images = req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`);
       }
 
 

@@ -41,7 +41,7 @@ const createHardware = async (req, res) => {
         try {
             const { categoryName, subCategoryId, subCategory, subSubCategoryId, subSubCategory, productName, price, description } = req.body;
 
-            const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
+            const images = req.files ? req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`) : [];
 
             let categoryId;
             if (subSubCategoryId) {
@@ -198,7 +198,7 @@ const updateHardwareProduct = async (req, res) => {
 
             let images = existingHardwareProduct.productDetails.images || [];
             if (req.files && req.files.length > 0) {
-                images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+                images = req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`);
             }
 
             const updatedDetails = {

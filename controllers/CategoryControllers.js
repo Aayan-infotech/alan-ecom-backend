@@ -42,7 +42,7 @@ const addCategory = async (req, res) => {
         return res.status(400).json({ message: "Category name is required." });
       }
 
-      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+      const imageUrl = req.file ? `http://44.196.64.110:5000/uploads/${req.file.filename}` : null;
 
       const category = new Category({
         categoryName,
@@ -78,7 +78,7 @@ const addSubCategory = async (req, res) => {
         return res.status(400).json({ message: "Category name and subcategory name are required." });
       }
 
-      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+      const imageUrl = req.file ? `http://44.196.64.110:5000/uploads/${req.file.filename}` : null;
 
       let category = await Category.findOne({ categoryName });
 
@@ -140,7 +140,7 @@ const addSubSubcategory = async (req, res) => {
         return res.status(404).json({ message: 'Subcategory not found' });
       }
 
-      const imageUrl = req.file ? `http://44.196.192.232:5000/uploads/${req.file.filename}` : null;
+      const imageUrl = req.file ? `http://44.196.64.110:5000/uploads/${req.file.filename}` : null;
 
       subcategory.isSubSubCategory = true;
 
@@ -282,8 +282,8 @@ const getAllSubSubCategories = async (req, res) => {
     if (subSubcategories.length === 0) {
       let products = [];
 
-      if(subcategory.categoryName === 'hardware'){
-        products = await Hardware.find({'productDetails.subCategory': subcategory.subcategoryName}).select('productDetails');
+      if (subcategory.categoryName === 'hardware') {
+        products = await Hardware.find({ 'productDetails.subCategory': subcategory.subcategoryName }).select('productDetails');
       }
 
       if (products.length === 0) {

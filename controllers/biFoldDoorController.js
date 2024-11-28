@@ -1,4 +1,5 @@
 const BiFoldDoor = require('../models/doorsModel');
+const Category= require('../models/CategoryModel');
 const multer = require('multer')
 const path = require('path')
 
@@ -38,7 +39,7 @@ const createBiFoldDoor = async (req, res) => {
 
         try {
             const { categoryName, subCategoryId, subCategory, subSubCategoryId, subSubCategory, productName, price, description } = req.body;
-            const images = req.files ? req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`) : [];
+            const images = req.files ? req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`) : [];
 
             let categoryId;
             if (subSubCategoryId) {
@@ -205,7 +206,7 @@ const updateBiFoldDoors = async (req, res) => {
 
             let images = existingDoor.productDetails.images || [];
             if (req.files && req.files.length > 0) {
-                images = req.files.map(file => `http://44.196.192.232:5000/uploads/${file.filename}`);
+                images = req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`);
             }
 
             const updatedDetails = {
