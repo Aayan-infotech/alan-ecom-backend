@@ -60,6 +60,7 @@ app.use("/api/personalDetails", PersonalDetailsRoute);
 app.use("/api/hardware",HardwareRoute );
 app.use("/api/entryDoor",EntryDoorRoute);
 app.use("/api/interiorDoors",InteriorDoorsRoute);
+app.use("/api/biFoldDoors",BiFoldDoorRoutes);
 
 // Start Server
 app.listen(PORT, () => {
