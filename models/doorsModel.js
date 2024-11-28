@@ -74,7 +74,6 @@ const doorsModel = new mongoose.Schema({
     speakEasyOption: dimensionSchema,
     selectGlassforDoor: dimensionSchema,
     selecttheFrameSize: dimensionSchema,
-    
     createdAt: {
       type: Date,
       default: Date.now,
