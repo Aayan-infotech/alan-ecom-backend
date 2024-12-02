@@ -213,6 +213,7 @@ const updateInteriorDoors = async (req, res) => {
             }
 
             const updatedDetails = {
+                categoryId: existingDoor.productDetails.categoryId || '' ,
                 categoryName: categoryName || existingDoor.productDetails.categoryName,
                 subCategory: subCategory || existingDoor.productDetails.subCategory,
                 subSubCategory: subSubCategory || existingDoor.productDetails.subSubCategory,
@@ -300,7 +301,7 @@ const addDimensions = async (req, res) => {
             return res.status(404).json({
                 status: 404,
                 success: false,
-                message: "Entry Door not found",
+                message: "Interior Door not found",
                 data: null
             });
         }

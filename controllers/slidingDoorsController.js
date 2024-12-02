@@ -1,5 +1,5 @@
-const EntryDoor = require('../models/doorsModel');
-const Category = require('../models/CategoryModel');
+const SlidingDoor = require('../models/doorsModel');
+const Category= require('../models/CategoryModel');
 const multer = require('multer')
 const path = require('path')
 
@@ -8,10 +8,9 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the file name
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
-
 
 const upload = multer({
     storage: storage,
@@ -29,14 +28,15 @@ const upload = multer({
     }
 }).array('images', 10);
 
-const createEntryDoor = async (req, res) => {
+const createSlidingDoor = async (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(400).json({
                 success: false,
                 message: err.message
-            });
+            })
         }
+
         try {
             const { categoryName, subCategoryId, subCategory, subSubCategoryId, subSubCategory, productName, price, description } = req.body;
             const images = req.files ? req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`) : [];
@@ -60,7 +60,7 @@ const createEntryDoor = async (req, res) => {
                 }
             }
 
-            const newEntryDoor = new EntryDoor({
+            const newSlidingDoor = new SlidingDoor({
                 productDetails: {
                     categoryId,
                     categoryName,
@@ -71,16 +71,17 @@ const createEntryDoor = async (req, res) => {
                     subSubCategory,
                     images
                 }
-            });
+            })
 
-            const savedEntryDoor = await newEntryDoor.save();
+            const savedSlidingDoor = await newSlidingDoor.save();
 
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: "Entry Door Created Successfully",
-                data: savedEntryDoor
+                message: "SlidingDoors created successfully",
+                data: savedSlidingDoor
             })
+
         } catch (error) {
             res.status(500).json({
                 status: 500,
@@ -91,15 +92,14 @@ const createEntryDoor = async (req, res) => {
     })
 }
 
-const getAllEntryDoors = async (req, res) => {
+const getAllSlidingDoors = async (req, res) => {
     try {
-        const allProduct = await EntryDoor.find({ 'productDetails.categoryName': "Entry Doors" }).select('productDetails');
-
-        if (!allProduct || allProduct.length === 0) {
+        const allProducts = await SlidingDoor.find({ 'productDetails.categoryName': "Sliding Doors" }).select('productDetails');
+        if (!allProducts || allProducts.length === 0) {
             return res.status(404).json({
                 status: 404,
                 success: false,
-                message: "No data found for Entry Doors",
+                message: "No Product Found",
                 data: null
             })
         }
@@ -107,8 +107,8 @@ const getAllEntryDoors = async (req, res) => {
         res.status(200).json({
             status: 200,
             success: true,
-            message: "All Entry Doors",
-            data: allProduct
+            message: "Products fetched successfully",
+            data: allProducts
         })
 
     } catch (error) {
@@ -120,16 +120,16 @@ const getAllEntryDoors = async (req, res) => {
     }
 }
 
-const getEntryDoorsById = async (req, res) => {
+const getProductById = async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await EntryDoor.findById(id);
+        const product = await SlidingDoor.findById(id);
 
         if (!product) {
-            return res.status(404).json({
+            res.status(404).json({
                 status: 404,
-                success: true,
-                message: "No data found for Entry Doors",
+                success: false,
+                message: "Product Not Found",
                 data: null
             })
         }
@@ -137,7 +137,7 @@ const getEntryDoorsById = async (req, res) => {
         res.status(200).json({
             status: 200,
             success: true,
-            message: "Entry Door Product found succesfully",
+            message: "Product feteched successfully",
             data: product
         })
 
@@ -150,16 +150,16 @@ const getEntryDoorsById = async (req, res) => {
     }
 }
 
-const deleteEntryDoors = async (req, res) => {
+const deleteSlidingDoors = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedProduct = await EntryDoor.findByIdAndDelete(id);
+        const deletedProduct = await SlidingDoor.findByIdAndDelete(id);
 
         if (!deletedProduct) {
             res.status(404).json({
                 status: 404,
                 success: false,
-                message: "No Entry Doors Product found",
+                message: "Product Not Found",
                 data: null
             })
         }
@@ -167,10 +167,9 @@ const deleteEntryDoors = async (req, res) => {
         res.status(200).json({
             status: 200,
             success: true,
-            message: "Entry Door Product deleted succesfully",
+            message: "Product deleted successfully",
             data: deletedProduct
         })
-
 
     } catch (error) {
         res.status(500).json({
@@ -181,7 +180,7 @@ const deleteEntryDoors = async (req, res) => {
     }
 }
 
-const updateEntryDoors = async (req, res) => {
+const updateSlidingDoors = async (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(400).json({
@@ -194,9 +193,9 @@ const updateEntryDoors = async (req, res) => {
 
             const { categoryName, subCategory, subSubCategory, productName, price, description } = req.body;
 
-            const existingEntryDoor = await EntryDoor.findById(id);
+            const existingDoor = await SlidingDoor.findById(id);
 
-            if (!existingEntryDoor) {
+            if (!existingDoor) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -205,23 +204,23 @@ const updateEntryDoors = async (req, res) => {
                 })
             }
 
-            let images = existingEntryDoor.productDetails.images || [];
+            let images = existingDoor.productDetails.images || [];
             if (req.files && req.files.length > 0) {
                 images = req.files.map(file => `http://44.196.64.110:5000/uploads/${file.filename}`);
             }
 
             const updatedDetails = {
-                categoryId: existingEntryDoor.productDetails.categoryId || '' ,
-                categoryName: categoryName || existingEntryDoor.productDetails.categoryName,
-                subCategory: subCategory || existingEntryDoor.productDetails.subCategory,
-                subSubCategory: subSubCategory || existingEntryDoor.productDetails.subSubCategory,
-                description: description || existingEntryDoor.productDetails.description,
-                productName: productName || existingEntryDoor.productDetails.productName,
-                price: price || existingEntryDoor.productDetails.price,
+                categoryId: existingDoor.productDetails.categoryId || '' ,
+                categoryName: categoryName || existingDoor.productDetails.categoryName,
+                subCategory: subCategory || existingDoor.productDetails.subCategory,
+                subSubCategory: subSubCategory || existingDoor.productDetails.subSubCategory,
+                description: description || existingDoor.productDetails.description,
+                productName: productName || existingDoor.productDetails.productName,
+                price: price || existingDoor.productDetails.price,
                 images,
             }
 
-            const updatedEntryDoor = await EntryDoor.findByIdAndUpdate(
+            const updatedDoor = await SlidingDoor.findByIdAndUpdate(
                 id,
                 { productDetails: updatedDetails },
                 { new: true }
@@ -231,7 +230,7 @@ const updateEntryDoors = async (req, res) => {
                 status: 200,
                 success: true,
                 message: "EntryDoorProduct updated successfully",
-                data: updatedEntryDoor,
+                data: updatedDoor,
             });
 
         } catch (error) {
@@ -289,17 +288,17 @@ const addDimensions = async (req, res) => {
             });
         }
 
-        const updatedEntryDoor = await EntryDoor.findByIdAndUpdate(
+        const updatedDoor = await SlidingDoor.findByIdAndUpdate(
             id,
             { $set: { dimensions: formattedDimensions } },
             { new: true }
         );
 
-        if (!updatedEntryDoor) {
+        if (!updatedDoor) {
             return res.status(404).json({
                 status: 404,
                 success: false,
-                message: "Entry Door not found",
+                message: "Sliding Door not found",
                 data: null
             });
         }
@@ -308,7 +307,7 @@ const addDimensions = async (req, res) => {
             status: 200,
             success: true,
             message: "Dimensions updated successfully",
-            data: updatedEntryDoor,
+            data: updatedDoor,
         });
 
     } catch (error) {
@@ -324,7 +323,7 @@ const addDimensions = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const category = await EntryDoor.find({ 'productDetails.categoryId': id }).select('productDetails');
+        const category = await SlidingDoor.find({ 'productDetails.categoryId': id }).select('productDetails');
 
         if (!category || category.length === 0) {
             return res.status(404).json({
@@ -334,8 +333,7 @@ const getProduct = async (req, res) => {
                 data: null
             })
         }
-
-        res.status(200).json({
+        return res.status(200).json({
             status: 200,
             success: true,
             message: "Product fetched successfully",
@@ -343,7 +341,7 @@ const getProduct = async (req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 500,
             success: false,
             message: error.message
@@ -352,11 +350,11 @@ const getProduct = async (req, res) => {
 }
 
 module.exports = {
-    createEntryDoor,
-    getAllEntryDoors,
-    getEntryDoorsById,
-    deleteEntryDoors,
-    updateEntryDoors,
+    createSlidingDoor,
+    getAllSlidingDoors,
+    getProductById,
+    deleteSlidingDoors,
+    updateSlidingDoors,
     addDimensions,
     getProduct
 }

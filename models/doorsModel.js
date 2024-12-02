@@ -55,8 +55,8 @@ const doorsModel = new mongoose.Schema({
     frameExtrusion: dimensionSchema,
     color: dimensionSchema,
     installationOption: dimensionSchema,
+    sideTheWindowOpens: dimensionSchema,
     doorSwingDirection: dimensionSchema,
-    Quantity: dimensionSchema,
     lockOption: dimensionSchema,
     glassOption: dimensionSchema,
     addPrefinish: dimensionSchema,
@@ -74,6 +74,7 @@ const doorsModel = new mongoose.Schema({
     speakEasyOption: dimensionSchema,
     selectGlassforDoor: dimensionSchema,
     selecttheFrameSize: dimensionSchema,
+    
     createdAt: {
       type: Date,
       default: Date.now,

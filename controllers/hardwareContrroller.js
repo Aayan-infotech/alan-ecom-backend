@@ -202,6 +202,7 @@ const updateHardwareProduct = async (req, res) => {
             }
 
             const updatedDetails = {
+                categoryId: existingHardwareProduct.productDetails.categoryId || '' ,
                 categoryName: categoryName || existingHardwareProduct.productDetails.categoryName,
                 subCategory: subCategory || existingHardwareProduct.productDetails.subCategory,
                 subSubCategory: subSubCategory || existingHardwareProduct.productDetails.subSubCategory,
