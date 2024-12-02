@@ -195,8 +195,10 @@ const updateBiFoldDoors = async (req, res) => {
 
             const existingDoor = await BiFoldDoor.findById(id);
 
+            console.log(existingDoor);
+
             if (!existingDoor) {
-                res.status(404).json({
+                return res.status(404).json({
                     status: 404,
                     success: false,
                     message: "Product not found",
@@ -210,6 +212,7 @@ const updateBiFoldDoors = async (req, res) => {
             }
 
             const updatedDetails = {
+                categoryId: existingDoor.productDetails.categoryId || '' ,
                 categoryName: categoryName || existingDoor.productDetails.categoryName,
                 subCategory: subCategory || existingDoor.productDetails.subCategory,
                 subSubCategory: subSubCategory || existingDoor.productDetails.subSubCategory,
@@ -297,7 +300,7 @@ const addDimensions = async (req, res) => {
             return res.status(404).json({
                 status: 404,
                 success: false,
-                message: "Entry Door not found",
+                message: "Bi Fold Door not found",
                 data: null
             });
         }
