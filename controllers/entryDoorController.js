@@ -120,6 +120,39 @@ const getAllEntryDoors = async (req, res) => {
     }
 }
 
+const getAllEntryDoorsById = async (req, res) => {
+    const { id } = req.params; // Extract the categoryId from request parameters
+    try {
+        // Find the Entry Door documents where productDetails.categoryId matches the provided id
+        const entryDoors = await EntryDoor.find({ 'productDetails.categoryId': id }).select('productDetails');
+
+        // If no Entry Door is found, return a 404 error
+        if (!entryDoors || entryDoors.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                success: false,
+                message: "Entry Door not found",
+                data: null
+            });
+        }
+
+        // Return the found Entry Door data
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: "Entry Door(s) Found",
+            data: entryDoors
+        });
+    } catch (error) {
+        // Handle any errors during the query
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 const getEntryDoorsById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -354,6 +387,7 @@ const getProduct = async (req, res) => {
 module.exports = {
     createEntryDoor,
     getAllEntryDoors,
+    getAllEntryDoorsById,
     getEntryDoorsById,
     deleteEntryDoors,
     updateEntryDoors,
